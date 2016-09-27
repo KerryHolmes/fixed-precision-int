@@ -11,6 +11,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include "arithmatic.hpp"
 
 #ifndef NUMBER_HPP
 #define NUMBER_HPP
@@ -59,10 +60,24 @@ class Number{
 
   Number operator+( const Number& num)
   {
+    int carry = 0;
     Number sum(*this);
     for(int i = 0; i < 2048; ++i)
     {
-      add_binary(sum, num);
+      carry = add_binary(sum.digits[0], carry);
+      carry = add_binary(sum.digits[0], num.digits[0]);
+    }
+    return sum;
+  }
+
+  Number operator-( const Number& num)
+  {
+    int carry = 0;
+    Number sum(*this);
+    for(int i = 0; i < 2048; ++i)
+    {
+      carry = sub_binary(sum.digits[0], carry);
+      carry = sub_binary(sum.digits[0], num.digits[0]);
     }
     return sum;
   }
@@ -70,7 +85,6 @@ class Number{
  friend bool operator==( const Number& lhs, const Number& rhs);
  friend bool operator<( const Number& lhs, const Number& rhs);
  friend bool operator>( const Number& lhs, const Number& rhs);
- friend int add_binary( const Number& lhs, const Number& rhs);
 };
 
 bool operator==( const Number& lhs, const Number& rhs)
@@ -108,11 +122,6 @@ bool operator<=( const Number& lhs, const Number& rhs)
 bool operator>=( const Number& lhs, const Number& rhs)
 {
     return !(lhs < rhs);
-}
-
-int add_binary( const Number& lhs, const Number& rhs)
-{
-  return 0;//TODO write this
 }
 
 #endif
