@@ -28,7 +28,10 @@ class Number{
   Number(Number const &c)//constructs a new number using the vector copy constructor
   :digits(c.digits)
   {}
-
+//Converts and stores a base 10 value in this number through repeated division
+//The logarithm is used to determine the most significant digit and stop writing there
+//The array is stored least significant to most significant, so there is no need to 
+//reverse the result of the repeated division
   Number(int decimal)
   :digits(2048,0)
   {
@@ -39,13 +42,14 @@ class Number{
         decimal = decimal / 2;
      }
   }
-
+//Copy assignment operatior works by using the vector assignment operator to replace the
+//current vector for this object
   Number& operator=( const Number& c)
   {
     digits = c.digits;
     return *this;
   }
-
+//This assignment operator converts a decimal number to a type Number via repeated division as above
   Number& operator=( int decimal)
   {
     digits = std::vector<int>(2048,0);
@@ -64,10 +68,19 @@ class Number{
     Number sum(*this);
     for(int i = 0; i < 2048; ++i)
     {
-      carry = add_binary(sum.digits[0], carry);
-      carry = add_binary(sum.digits[0], num.digits[0]);
+      carry = ( add_binary(sum.digits[i], carry) + add_binary(sum.digits[i], num.digits[i]) );
     }
     return sum;
+  }
+
+  Number& operator+=( const Number& num)
+  {
+    int carry = 0;
+    for(int i = 0; i < 2048; ++i)
+    {
+      carry = ( add_binary(digits[i], carry) + add_binary(digits[i], num.digits[i]) );
+    }
+    return *this;
   }
 
   Number operator-( const Number& num)
@@ -76,10 +89,29 @@ class Number{
     Number sum(*this);
     for(int i = 0; i < 2048; ++i)
     {
-      carry = sub_binary(sum.digits[0], carry);
-      carry = sub_binary(sum.digits[0], num.digits[0]);
+      carry = ( sub_binary(sum.digits[i], carry) + sub_binary(sum.digits[i], num.digits[i]) );
     }
     return sum;
+  }
+
+  Number& operator-=( const Number& num)
+  {
+    int carry = 0;
+    for(int i = 0; i < 2048; ++i)
+    {
+      carry = ( sub_binary(digits[i], carry) + sub_binary(digits[i], num.digits[i]) );
+    }
+    return *this;
+  }
+
+  Number operator*( const Number& num)
+  {
+    
+  }
+
+  Number& operator*=( const Number& num)
+  {
+    
   }
  
  friend bool operator==( const Number& lhs, const Number& rhs);
