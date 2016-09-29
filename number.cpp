@@ -53,12 +53,58 @@
      return *this;
   }
 
-  Number Number::operator<<( const int shift)
+  Number Number::operator<<( const int shift )
   {
-    for(int i = 2046; i >= 0; --i)
+    Number result(*this);
+    for(shift; shift > 0; --shift)
     {
-      
+        for(int i = 2046; i >= 0; --i)
+        {
+          result.digits[i+1] = result.digits[i];
+        }
+        result.digits[0] = 0;
     }
+    return result;
+  }
+
+   Number& Number::operator<<=( const int shift )
+  {
+    for(shift; shift > 0; --shift)
+    {
+        for(int i = 2046; i >= 0; --i)
+        {
+          digits[i+1] = digits[i];
+        }
+        digits[0] = 0;
+    }
+    return *this;
+  }
+
+  Number Number::operator>>( const int shift )
+  {
+    Number result(*this);
+    for(shift; shift > 0; --shift)
+    {
+        for(int i = 1; i >= 2047; ++i)
+        {
+          result.digits[i-1] = result.digits[i];
+        }
+        result.digits[2047] = 0;
+    }
+    return result;
+  }
+
+   Number& Number::operator>>=( const int shift )
+  {
+    for(shift; shift > 0; --shift)
+    {
+        for(int i = 0; i >= 2047; ++i)
+        {
+          digits[i-1] = digits[i];
+        }
+        digits[2047] = 0;
+    }
+    return *this;
   }
 
   Number Number::operator+( const Number& num)
