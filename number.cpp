@@ -153,8 +153,12 @@
 //Multiplication using russian peasant method
   Number Number::operator*( const Number& num)
   {
+    Number temp(*this);
     int product = 0;
-    while
+    while (num > 0)
+    {
+      if( )
+    }
   }
 
   Number& Number::operator*=( const Number& num)
