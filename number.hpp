@@ -32,6 +32,14 @@ class Number{
 //This assignment operator converts a decimal number to a type Number via repeated division as above
   Number& operator=( int decimal);
 
+  Number operator<<( const int shift);
+
+  Number& operator<<=(const int shift);
+
+  Number operator>>( const int shift);
+
+  Number& operator>>=(const int shift);
+
   Number operator+( const Number& num);
 
   Number& operator+=( const Number& num);
