@@ -114,12 +114,12 @@ Number Number::operator+( const Number& num)
 {
   int carry = 0;
   Number sum(*this);
-  if(sum.digits.size() == std::min(sum.digits.size(), num.digits.size()))
+  if(sum.digits.size() < std::min(sum.digits.size(), num.digits.size()))
   {
       for(int i = sum.digits.size(); i < num.digits.size(); ++i)
          sum.digits.push_back(0);
   }
-  else
+  elseif(num.digits.size() < std::min(sum.digits.size(), num.digits.size()))
   {
       for(int i = num.digits.size(); i < sum.digits.size(); ++i)
          num.digits.push_back(0);
@@ -139,12 +139,12 @@ Number Number::operator+( const Number& num)
 Number& Number::operator+=( const Number& num)
 {
   int carry = 0;
-  if(digits.size() == std::min(digits.size(), num.digits.size()))
+  if(digits.size() < std::min(digits.size(), num.digits.size()))
   {
       for(int i = digits.size(); i < num.digits.size(); ++i)
          digits.push_back(0);
   }
-  else
+  elseif(num.digits.size() < std::min(digits.size(), num.digits.size()))
   {
       for(int i = num.digits.size(); i < digits.size(); ++i)
          num.digits.push_back(0);
@@ -160,6 +160,59 @@ Number& Number::operator+=( const Number& num)
   return *this;
 }
 
+Number Number::operator-( const Number& num)
+{
+  int carry = 0;
+  Number sum(*this);
+  if(sum.digits.size() < std::min(digits.size(), num.digits.size()))
+  {
+    throw exception("Negative Number");
+  }
+  elseif(num.digits.size() < std::min(sum.digits.size(), num.digits.size()))
+  {
+    for(int i = num.digits.size(); i < sum.digits.size(); ++i)
+    {
+      num.digits.push_back(0);
+    }
+  }
+  for(int i = 0; i < sum.digits.size(); ++i)
+  {
+    carry = ( sub_binary(sum.digits[i], carry) ^ sub_binary(sum.digits[i], num.digits[i]) );
+  }
+  if(carry)
+  {
+    throw exception("Negative Number");
+  }
+
+  return sum;
+}
+
+Number Number::operator-=( const Number& num)
+{
+  int carry = 0;
+  if(digits.size() < std::min(digits.size(), num.digits.size()))
+  {
+    throw exception("Negative Number");
+  }
+  elseif(num.digits.size() < std::min(digits.size(), num.digits.size()))
+  {
+    for(int i = num.digits.size(); i < digits.size(); ++i)
+    {
+      num.digits.push_back(0);
+    }
+  }
+  for(int i = 0; i < sum.digits.size(); ++i)
+  {
+    carry = ( sub_binary(sum.digits[i], carry) ^ sub_binary(sum.digits[i], num.digits[i]) );
+  }
+  if(carry)
+  {
+    throw exception("Negative Number");
+  }
+
+  return sum;
+}
+
 int add_arbitrary( int& lhs, const int& rhs, int base)
 {
   if( base > (lhs + rhs)  )
@@ -171,5 +224,19 @@ int add_arbitrary( int& lhs, const int& rhs, int base)
   {
     lhs += (lhs + rhs) - base;
     return 1;
+  }
+}
+
+int sub_arbitrary( int& lhs, const int& rhs, int base)
+{
+  if( 0 > (lhs - rhs) )
+  {
+    lhs = (base + lhs) - rhs;
+    return 1;
+  }
+  else
+  {
+    lhs -= rhs;
+    return 0;
   }
 }
