@@ -11,6 +11,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include "aribitrary.hpp"
 
 Number::Number() //constructs the number to have a size 1 vector with the only digit at 0
 :digits(1,0), base(2) //The base defaults to being two

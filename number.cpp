@@ -276,10 +276,10 @@ int to_decimal(const Number& num)
 {
   int sum = 0;
   int power = 1;
-     for( int i = 0; i <= 2048; ++i)
-     {
-        sum += digits[i] * power;
-        power *= 2;
-     }
-     return sum;
+  for( int i = 0; i <= 2048; ++i)
+    {
+      sum += digits[i] * power;
+      power *= 2;
+    }
+   return sum;
 }
