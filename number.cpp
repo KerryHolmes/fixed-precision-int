@@ -224,6 +224,24 @@ bool operator>=( const Number& lhs, const Number& rhs)
     return !(lhs < rhs);
 }
 
+std::ostream& operator<<(std::ostream& os, const Number& num)
+{
+  for(int i = 0; i < 2048; ++i)
+  {
+    os << num.digits[i];
+  }
+  return os;
+}
+
+std::istream& operator>>(std::istream& os, const Number& num)
+{
+  for(int i = 0; i < 2048; ++i)
+  {
+    os >> num.digits[i];
+  }
+  return os;
+}
+
 //This function is used to add two digits in binary
 //The result is stored in the first digit, which is passed by reference
 //The carry is the return value of the function
