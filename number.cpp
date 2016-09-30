@@ -162,6 +162,7 @@
         {
           product += temp;
         }
+      counter = counter / 2;
       num >>= 1;
       temp <<= 1;
     }
@@ -179,6 +180,7 @@
         {
           product += temp;
         }
+      counter = counter / 2;
       num >>= 1;
       temp <<= 1;
     }
