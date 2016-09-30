@@ -154,16 +154,36 @@
   Number Number::operator*( const Number& num)
   {
     Number temp(*this);
-    int product = 0;
-    while (num > 0)
+    Number product;
+    int counter = to_decimal(num);
+    while (counter > 0)
     {
-      if( )
+      if( num.digits[0] & 1)
+        {
+          product += temp;
+        }
+      num >>= 1;
+      temp <<= 1;
     }
+    return product;
   }
 
   Number& Number::operator*=( const Number& num)
   {
-    
+    Number temp(*this);
+    Number product;
+    int counter = to_decimal(num);
+    while (counter > 0)
+    {
+      if( num.digits[0] & 1)
+        {
+          product += temp;
+        }
+      num >>= 1;
+      temp <<= 1;
+    }
+    digits = product;
+    return (*this);
   }
  
 bool operator==( const Number& lhs, const Number& rhs)
@@ -230,4 +250,16 @@ int sub_binary( int& lhs, const int& rhs)
     lhs -= rhs;
     return 0;
   }
+}
+
+int to_decimal(const Number& num)
+{
+  int sum = 0;
+  int power = 1;
+     for( int i = 0; i <= 2048; ++i)
+     {
+        sum += digits[i] * power;
+        power *= 2;
+     }
+     return sum;
 }
