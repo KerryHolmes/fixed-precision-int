@@ -11,7 +11,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-
+#include "number.hpp"
   Number::Number() //constructs the number to have a 2048 vector with every digit at 0
   :digits(2048,0)
   {}
