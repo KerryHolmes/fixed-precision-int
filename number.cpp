@@ -85,7 +85,7 @@
     Number result(*this);
     for(shift; shift > 0; --shift)
     {
-        for(int i = 1; i >= 2047; ++i)
+        for(int i = 1; i <= 2047; ++i)
         {
           result.digits[i-1] = result.digits[i];
         }
@@ -98,7 +98,7 @@
   {
     for(shift; shift > 0; --shift)
     {
-        for(int i = 0; i >= 2047; ++i)
+        for(int i = 1; i <= 2047; ++i)
         {
           digits[i-1] = digits[i];
         }
