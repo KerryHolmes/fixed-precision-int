@@ -109,3 +109,67 @@ Number& Number::operator>>=( const int shift )
   }
   return *this;
 }
+
+Number Number::operator+( const Number& num)
+{
+  int carry = 0;
+  Number sum(*this);
+  if(sum.digits.size() == std::min(sum.digits.size(), num.digits.size()))
+  {
+      for(int i = sum.digits.size(); i < num.digits.size(); ++i)
+         sum.digits.push_back(0);
+  }
+  else
+  {
+      for(int i = num.digits.size(); i < sum.digits.size(); ++i)
+         num.digits.push_back(0);
+  }
+  for(int i = 0; i < sum.digits.size(); ++i)
+  {
+    carry = ( add_arbitrary(sum.digits[i], carry) ^ add_arbitrary(sum.digits[i], num.digits[i]) );
+  }
+
+  if(carry)
+         sum.digits.push_back(carry);
+
+  return sum;
+}
+
+
+Number& Number::operator+=( const Number& num)
+{
+  int carry = 0;
+  if(digits.size() == std::min(digits.size(), num.digits.size()))
+  {
+      for(int i = digits.size(); i < num.digits.size(); ++i)
+         digits.push_back(0);
+  }
+  else
+  {
+      for(int i = num.digits.size(); i < digits.size(); ++i)
+         num.digits.push_back(0);
+  }
+  for(int i = 0; i < digits.size(); ++i)
+  {
+    carry = ( add_arbitrary(digits[i], carry) ^ add_arbitrary(digits[i], num.digits[i]) );
+  }
+
+  if(carry)
+         digits.push_back(carry);
+
+  return *this;
+}
+
+int add_arbitrary( int& lhs, const int& rhs, int base)
+{
+  if( base > (lhs + rhs)  )
+  {
+    lhs += rhs;
+    return 0;
+  }
+  else
+  {
+    lhs += (lhs + rhs) - base;
+    return 1;
+  }
+}
