@@ -203,7 +203,7 @@ Number Number::operator-=( const Number& num)
   }
   for(int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( sub_binary(sum.digits[i], carry) ^ sub_binary(sum.digits[i], num.digits[i]) );
+    carry = ( sub_arbitrary(sum.digits[i], carry) ^ sub_arbitrary(sum.digits[i], num.digits[i]) );
   }
   if(carry)
   {
