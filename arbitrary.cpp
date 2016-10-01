@@ -241,3 +241,14 @@ int sub_arbitrary( int& lhs, const int& rhs, int base)
     return 0;
   }
 }
+
+Number& Number::half()
+{
+  for(int i = digits.size(); i > 0; --i)
+  {
+    digits[i] = digits[i] / 2;
+    digits[i-1] *= digits[i] % 2;
+  }
+  digits[0] = digits[0] / 2;
+  returns *this;
+}
