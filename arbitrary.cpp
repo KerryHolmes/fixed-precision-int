@@ -242,6 +242,18 @@ int sub_arbitrary( int& lhs, const int& rhs, int base)
   }
 }
 
+int Number::convert_decimal()
+{
+  int sum = 0;
+  int power = 1;
+  for( int i = 0; i < digits.size(); i++)
+  {
+     sum += digits[i] * power;
+     power *= 2;
+  }
+  return sum;
+}
+
 Number& Number::half()
 {
   for(int i = digits.size(); i > 0; --i)
@@ -263,4 +275,20 @@ Number Number::divide_by_two()
   }
   temp.digits[0] = temp.digits[0] / 2;
   returns temp;
+}
+
+bool operator==( const Number& lhs, const Number& rhs)
+{
+  if(lhs.mst_sig_bit() != rhs.mst_sig_bit())
+    for( int i = 2047; i >= 0; i++)
+    {
+      if(lhs.digits[i] != rhs.digits[i])
+        return false;
+    }
+    return true;
+}
+
+bool operator!=( const Number& lhs, const Number& rhs)
+{
+  return !(lhs == rhs);
 }

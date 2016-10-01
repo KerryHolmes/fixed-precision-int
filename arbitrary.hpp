@@ -49,6 +49,8 @@ class Number{
 
   Number& operator-=( const Number& num);
 
+  int mst_sig_bit();
+
 //Multiplication using russian peasant method
   Number operator*( const Number& num);
 

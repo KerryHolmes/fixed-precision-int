@@ -272,7 +272,7 @@ int sub_binary( int& lhs, const int& rhs)
   }
 }
 
-int to_decimal(const Number& num)
+int Number::to_decimal()
 {
   int sum = 0;
   int power = 1;
