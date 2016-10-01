@@ -252,3 +252,15 @@ Number& Number::half()
   digits[0] = digits[0] / 2;
   returns *this;
 }
+
+Number Number::divide_by_two()
+{
+  Number temp(*this);
+  for(int i = digits.size(); i > 0; --i)
+  {
+    temp.digits[i] = temp.digits[i] / 2;
+    temp.digits[i-1] *= temp.digits[i] % 2;
+  }
+  temp.digits[0] = temp.digits[0] / 2;
+  returns temp;
+}
