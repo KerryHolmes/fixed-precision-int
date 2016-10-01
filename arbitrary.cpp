@@ -279,16 +279,44 @@ Number Number::divide_by_two()
 
 bool operator==( const Number& lhs, const Number& rhs)
 {
+  assert(lhs.base == rhs.base);
   if(lhs.mst_sig_bit() != rhs.mst_sig_bit())
-    for( int i = 2047; i >= 0; i++)
+  {
+    return false;
+  }
+  for( int i = lhs.mst_sig_bit(); i >= 0; ++i)
+  {
+    if(lhs.digits[i] != rhs.digits[i])
     {
-      if(lhs.digits[i] != rhs.digits[i])
-        return false;
+       return false;
     }
-    return true;
+  }
+  return true;
 }
 
 bool operator!=( const Number& lhs, const Number& rhs)
 {
   return !(lhs == rhs);
+}
+
+bool operator<( const Number& lhs, const Number& rhs)
+{
+  assert(lhs.base == rhs.base);
+  return std::lexicographical_compare(lhs.digits.begin(), lhs.digits.end(),
+                                      rhs.digits.begin(), rhs.digits.end());
+}
+
+bool operator>( const Number& lhs, const Number& rhs)
+{
+    return rhs < lhs;
+}
+
+bool operator<=( const Number& lhs, const Number& rhs)
+{
+    return !(lhs > rhs);
+}
+
+bool operator>=( const Number& lhs, const Number& rhs)
+{
+    return !(lhs < rhs);
 }
