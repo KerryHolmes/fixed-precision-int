@@ -113,6 +113,7 @@ Number& Number::operator>>=( const int shift )
 
 Number Number::operator+( const Number& num)
 {
+  assert(lhs.base == rhs.base);
   int carry = 0;
   Number sum(*this);
   if(sum.digits.size() < std::min(sum.digits.size(), num.digits.size()))
@@ -127,7 +128,7 @@ Number Number::operator+( const Number& num)
   }
   for(int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( add_arbitrary(sum.digits[i], carry) ^ add_arbitrary(sum.digits[i], num.digits[i]) );
+    carry = ( add_arbitrary(sum.digits[i], carry) + add_arbitrary(sum.digits[i], num.digits[i]) );
   }
 
   if(carry)
@@ -139,6 +140,7 @@ Number Number::operator+( const Number& num)
 
 Number& Number::operator+=( const Number& num)
 {
+  assert(lhs.base == rhs.base);
   int carry = 0;
   if(digits.size() < std::min(digits.size(), num.digits.size()))
   {
@@ -152,7 +154,7 @@ Number& Number::operator+=( const Number& num)
   }
   for(int i = 0; i < digits.size(); ++i)
   {
-    carry = ( add_arbitrary(digits[i], carry) ^ add_arbitrary(digits[i], num.digits[i]) );
+    carry = ( add_arbitrary(digits[i], carry) + add_arbitrary(digits[i], num.digits[i]) );
   }
 
   if(carry)
@@ -163,6 +165,7 @@ Number& Number::operator+=( const Number& num)
 
 Number Number::operator-( const Number& num)
 {
+  assert(lhs.base == rhs.base);
   int carry = 0;
   Number sum(*this);
   if(sum.digits.size() < std::min(digits.size(), num.digits.size()))
@@ -178,7 +181,7 @@ Number Number::operator-( const Number& num)
   }
   for(int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( sub_binary(sum.digits[i], carry) ^ sub_binary(sum.digits[i], num.digits[i]) );
+    carry = ( sub_binary(sum.digits[i], carry) + sub_binary(sum.digits[i], num.digits[i]) );
   }
   if(carry)
   {
@@ -190,6 +193,7 @@ Number Number::operator-( const Number& num)
 
 Number Number::operator-=( const Number& num)
 {
+  assert(lhs.base == rhs.base);
   int carry = 0;
   if(digits.size() < std::min(digits.size(), num.digits.size()))
   {
@@ -204,7 +208,7 @@ Number Number::operator-=( const Number& num)
   }
   for(int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( sub_arbitrary(sum.digits[i], carry) ^ sub_arbitrary(sum.digits[i], num.digits[i]) );
+    carry = ( sub_arbitrary(sum.digits[i], carry) + sub_arbitrary(sum.digits[i], num.digits[i]) );
   }
   if(carry)
   {
