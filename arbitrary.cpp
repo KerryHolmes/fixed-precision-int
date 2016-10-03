@@ -229,7 +229,7 @@ Number Number::operator*( const Number& num)
     {
       product += temp;
     }
-    temp.double();
+    double();
     num.half();
   }
   return product;
@@ -294,12 +294,31 @@ int Number::convert_decimal()
 
 Number& Number::double()
 {
-  
+  int carry = 0;
+  for(int i = 0; i < digits.size(); ++i)
+  {
+    digits[i] *= 2;
+    carry = (digits[i] += carry) / base;
+    digits[i] = digits[i] % base;
+  }
+  if(carry)
+    digits.push_back(carry);
+  return *this;
 }
 
 Number Number::multiply_by_two()
 {
-  
+  Number temp(*this);
+  int carry = 0;
+  for(int i = 0; i < temp.digits.size(); ++i)
+  {
+    temp.digits[i] *= 2;
+    carry = (temp.digits[i] += carry) / temp.base;
+    temp.digits[i] = temp.digits[i] % temp.base;
+  }
+  if(carry)
+    temp.digits.push_back(carry);
+  return temp;
 }
 
 Number& Number::half()
