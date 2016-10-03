@@ -252,6 +252,49 @@ Number& Number::operator*=( const Number& num)
   return *this;
 }
 
+Number Number::operator/(const Number& num)
+{
+  assert(base == num.base);
+  Number temp(*this);
+  if(temp.digits.size() < std::min(temp.digits.size(), num.digits.size()))
+  {
+      for(int i = temp.digits.size(); i < num.digits.size(); ++i)
+         temp.digits.push_back(0);
+  }
+  elseif(num.digits.size() < std::min(temp.digits.size(), num.digits.size()))
+  {
+      for(int i = num.digits.size(); i < temp.digits.size(); ++i)
+         num.digits.push_back(0);
+  }
+
+  return recr_division(temp, num);
+}
+
+Number& Number::operator/=(const Number& num)
+{
+  assert(base == num.base);
+  if(digits.size() < std::min(digits.size(), num.digits.size()))
+  {
+      for(int i = digits.size(); i < num.digits.size(); ++i)
+         digits.push_back(0);
+  }
+  elseif(num.digits.size() < std::min(digits.size(), num.digits.size()))
+  {
+      for(int i = num.digits.size(); i < digits.size(); ++i)
+         num.digits.push_back(0);
+  }
+
+  *this = recr_division(*this, num);
+  return this;
+}
+
+Number Number::recr_division( Number& lhs, const Number& rhs)
+{
+  if(lhs < rhs)
+    return 0;
+  return Number(1,lhs.base)+((x-y)/y)
+}
+
 int add_arbitrary( int& lhs, const int& rhs, int base)
 {
   if( base > (lhs + rhs)  )
@@ -367,6 +410,13 @@ bool operator==( const Number& lhs, const Number& rhs)
     }
   }
   return true;
+}
+
+bool operator==( const Number& lhs, const int rhs)
+{
+  Number temp(rhs, lhs.base);
+  return lhs == rhs;
+
 }
 
 bool operator!=( const Number& lhs, const Number& rhs)
