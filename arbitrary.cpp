@@ -113,7 +113,7 @@ Number& Number::operator>>=( const int shift )
 
 Number Number::operator+( const Number& num)
 {
-  assert(lhs.base == rhs.base);
+  assert(base == num.base);
   int carry = 0;
   Number sum(*this);
   if(sum.digits.size() < std::min(sum.digits.size(), num.digits.size()))
@@ -140,7 +140,7 @@ Number Number::operator+( const Number& num)
 
 Number& Number::operator+=( const Number& num)
 {
-  assert(lhs.base == rhs.base);
+  assert(base == num.base);
   int carry = 0;
   if(digits.size() < std::min(digits.size(), num.digits.size()))
   {
@@ -165,7 +165,7 @@ Number& Number::operator+=( const Number& num)
 
 Number Number::operator-( const Number& num)
 {
-  assert(lhs.base == rhs.base);
+  assert(base == num.base);
   int carry = 0;
   Number sum(*this);
   if(sum.digits.size() < std::min(digits.size(), num.digits.size()))
@@ -193,7 +193,7 @@ Number Number::operator-( const Number& num)
 
 Number Number::operator-=( const Number& num)
 {
-  assert(lhs.base == rhs.base);
+  assert(base == num.base);
   int carry = 0;
   if(digits.size() < std::min(digits.size(), num.digits.size()))
   {
@@ -216,6 +216,23 @@ Number Number::operator-=( const Number& num)
   }
 
   return sum;
+}
+
+Number Number::operator*( const Number& num)
+{
+  assert(base == num.base);
+  Number temp(*this);
+  Number product;
+  while(num.digits.size() > 1 && num[num.mst_sig_digit()] > 0)
+  {
+    if(num.digits[0] % 2 == 1 )
+    {
+      product += temp;
+    }
+    temp.double();
+    num.half();
+  }
+  return product;
 }
 
 int add_arbitrary( int& lhs, const int& rhs, int base)
@@ -263,9 +280,13 @@ Number& Number::half()
   for(int i = digits.size(); i > 0; --i)
   {
     digits[i] = digits[i] / 2;
-    digits[i-1] *= digits[i] % 2;
+    digits[i-1] += base * (digits[i] % 2);
   }
   digits[0] = digits[0] / 2;
+  while(digits[mst_sig_bit()] == 0)
+  {
+    digits.pop_back();
+  }
   returns *this;
 }
 
@@ -275,9 +296,13 @@ Number Number::divide_by_two()
   for(int i = digits.size(); i > 0; --i)
   {
     temp.digits[i] = temp.digits[i] / 2;
-    temp.digits[i-1] *= temp.digits[i] % 2;
+    temp.digits[i-1] += base * (temp.digits[i] % 2);
   }
   temp.digits[0] = temp.digits[0] / 2;
+  while(temp.digits[temp.mst_sig_bit()] == 0)
+  {
+    temp.digits.pop_back();
+  }
   returns temp;
 }
 
