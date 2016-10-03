@@ -235,6 +235,23 @@ Number Number::operator*( const Number& num)
   return product;
 }
 
+Number& Number::operator*=( const Number& num)
+{
+  assert(base == num.base);
+  Number product;
+  while(num.digits.size() > 1 && num[num.mst_sig_digit()] > 0)
+  {
+    if(num.digits[0] % 2 == 1 )
+    {
+      product += *this;
+    }
+    this->double();
+    num.half();
+  }
+  *this = product;
+  return *this;
+}
+
 int add_arbitrary( int& lhs, const int& rhs, int base)
 {
   if( base > (lhs + rhs)  )
@@ -273,6 +290,16 @@ int Number::convert_decimal()
      power *= 2;
   }
   return sum;
+}
+
+Number& Number::double()
+{
+  
+}
+
+Number Number::multiply_by_two()
+{
+  
 }
 
 Number& Number::half()
