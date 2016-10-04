@@ -154,7 +154,7 @@ Number Number::operator-( Number num)
   Number sum(*this);
   if(sum.digits.size() < std::min(digits.size(), num.digits.size()))
   {
-    throw std::exception(std::runtime_error);
+    throw std::runtime_error("Negative Number Detected"));
   }
   else if(num.digits.size() < std::min(sum.digits.size(), num.digits.size()))
   {
@@ -169,7 +169,7 @@ Number Number::operator-( Number num)
   }
   if(carry)
   {
-    throw std::exception(std::runtime_error);
+    throw std::runtime_error("Negative Number Detected"));
   }
 
   return sum;
@@ -181,7 +181,7 @@ Number& Number::operator-=( Number num)
   int carry = 0;
   if(digits.size() < std::min(digits.size(), num.digits.size()))
   {
-    throw std::exception(std::runtime_error);
+    throw std::runtime_error("Negative Number Detected"));
   }
   else if(num.digits.size() < std::min(digits.size(), num.digits.size()))
   {
@@ -196,7 +196,7 @@ Number& Number::operator-=( Number num)
   }
   if(carry)
   {
-    throw std::exception(std::runtime_error);
+    throw std::runtime_error("Negative Number Detected"));
   }
 
   return *this;
@@ -207,7 +207,7 @@ Number Number::operator*( Number num)
   assert(base == num.base);
   Number temp(*this);
   Number product;
-  while(num.digits.size() > 1 && num[num.mst_sig_dig()] > 0)
+  while(num.digits.size() > 1 && num.digits[num.mst_sig_dig()] > 0)
   {
     if(num.digits[0] % 2 == 1 )
     {
@@ -223,7 +223,7 @@ Number& Number::operator*=( Number num)
 {
   assert(base == num.base);
   Number product;
-  while(num.digits.size() > 1 && num[num.mst_sig_dig()] > 0)
+  while(num.digits.size() > 1 && num.digits[num.mst_sig_dig()] > 0)
   {
     if(num.digits[0] % 2 == 1 )
     {
@@ -325,7 +325,7 @@ int Number::convert_decimal()
 void Number::double_num()
 {
   int carry = 0;
-  for(int i = 0; i < digits.size(); ++i)
+  for(unsigned int i = 0; i < digits.size(); ++i)
   {
     digits[i] *= 2;
     carry = (digits[i] += carry) / base;
