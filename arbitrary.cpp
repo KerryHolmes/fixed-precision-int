@@ -250,7 +250,7 @@ Number& Number::operator/=(const Number& num)
   return *this;
 }
 
-Number Number::operator%(cont Number& num)
+Number Number::operator%(const Number& num)
 {
   assert(base == num.base);
   Number temp(*this);
@@ -258,7 +258,7 @@ Number Number::operator%(cont Number& num)
   return recur_modulus(temp, num);
 }
 
-Number Number::operator%(cont Number& num)
+Number& Number::operator%=(const Number& num)
 {
   assert(base == num.base);
   match_length(*this, num);
@@ -399,7 +399,7 @@ bool operator==( const Number& lhs, const Number& rhs)
 bool operator==( const Number& lhs, const int rhs)
 {
   Number temp(rhs, lhs.base);
-  return lhs == rhs;
+  return lhs == temp;
 
 }
 
@@ -430,7 +430,7 @@ bool operator>=( const Number& lhs, const Number& rhs)
     return !(lhs < rhs);
 }
 
-void match_length( Number& lhs, Number& rhs)
+void Number::match_length( Number& lhs, Number& rhs)
 {
   while(lhs.digits.size() < rhs.digits.size())
          lhs.digits.push_back(0);

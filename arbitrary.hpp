@@ -26,7 +26,7 @@ class Number{
 //The logarithm is used to determine the most significant digit and stop writing there
 //The array is stored least significant to most significant, so there is no need to 
 //reverse the result of the repeated division
-  Number(int decimal);
+  Number(int decimal, int use_base);
 //Copy assignment operatior works by using the vector assignment operator to replace the
 //current vector for this object
   Number& operator=( const Number& c);
@@ -49,12 +49,35 @@ class Number{
 
   Number& operator-=( const Number& num);
 
-  int mst_sig_bit();
-
-//Multiplication using russian peasant method
   Number operator*( const Number& num);
 
   Number& operator*=( const Number& num);
+
+  Number operator/(const Number& num);
+
+  Number& operator/=(const Number& num);
+
+  Number operator%(const Number& num);
+
+  Number& operator%=(const Number& num);
+
+  Number recur_modulus(Number& lhs, const Number& rhs);
+
+  Number recur_division( Number& lhs, const Number& rhs);
+
+  int mst_sig_bit();
+
+  int convert_decimal();
+
+  Number& double();
+
+  Number divide_by_two();
+
+  Number& half();
+
+  Number multiply_by_two();
+
+  void match_length( Number& lhs, Number& rhs);
 
  friend bool operator==( const Number& lhs, const Number& rhs);
  friend bool operator<( const Number& lhs, const Number& rhs);
@@ -65,5 +88,9 @@ bool operator>( const Number& lhs, const Number& rhs);
 bool operator!=( const Number& lhs, const Number& rhs);
 bool operator<=( const Number& lhs, const Number& rhs);
 bool operator>=( const Number& lhs, const Number& rhs);
+bool operator==( const Number& lhs, const int rhs);
+
+int add_arbitrary( int& lhs, const int& rhs, int base);
+int sub_arbitrary( int& lhs, const int& rhs, int base);
 
 #endif
