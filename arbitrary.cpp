@@ -118,7 +118,7 @@ Number Number::operator+( Number num)
   int carry = 0;
   Number sum(*this);
   match_length(sum, num);
-  for(int i = 0; i < sum.digits.size(); ++i)
+  for(unsigned int i = 0; i < sum.digits.size(); ++i)
   {
     carry = ( add_arbitrary(sum.digits[i], carry, sum.base) + add_arbitrary(sum.digits[i], num.digits[i], num.base) );
   }
@@ -135,7 +135,7 @@ Number& Number::operator+=( Number num)
   assert(base == num.base);
   int carry = 0;
   match_length(*this, num);
-  for(int i = 0; i < digits.size(); ++i)
+  for(unsigned int i = 0; i < digits.size(); ++i)
   {
     carry = ( add_arbitrary(digits[i], carry, base) + add_arbitrary(digits[i], num.digits[i], num.base) );
   }
@@ -153,22 +153,22 @@ Number Number::operator-( Number num)
   Number sum(*this);
   if(sum.digits.size() < std::min(digits.size(), num.digits.size()))
   {
-    throw std::exception("Negative Number");
+    throw std::exception(runtime_error);
   }
   else if(num.digits.size() < std::min(sum.digits.size(), num.digits.size()))
   {
-    for(int i = num.digits.size(); i < sum.digits.size(); ++i)
+    for(unsigned int i = num.digits.size(); i < sum.digits.size(); ++i)
     {
       num.digits.push_back(0);
     }
   }
-  for(int i = 0; i < sum.digits.size(); ++i)
+  for(unsigned int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( sub_arbitrary(sum.digits[i], carry) + sub_arbitrary(sum.digits[i], num.digits[i]) );
+    carry = ( sub_arbitrary(sum.digits[i], carry, sum.base) + sub_arbitrary(sum.digits[i], num.digits[i], sum.base) );
   }
   if(carry)
   {
-    throw exception("Negative Number");
+    throw std::exception(runtime_error);
   }
 
   return sum;
@@ -180,22 +180,22 @@ Number& Number::operator-=( Number num)
   int carry = 0;
   if(digits.size() < std::min(digits.size(), num.digits.size()))
   {
-    throw exception("Negative Number");
+    throw std::exception(runtime_error);
   }
   elseif(num.digits.size() < std::min(digits.size(), num.digits.size()))
   {
-    for(int i = num.digits.size(); i < digits.size(); ++i)
+    for(unsigned int i = num.digits.size(); i < digits.size(); ++i)
     {
       num.digits.push_back(0);
     }
   }
-  for(int i = 0; i < sum.digits.size(); ++i)
+  for(unsigned int i = 0; i < digits.size(); ++i)
   {
-    carry = ( sub_arbitrary(sum.digits[i], carry) + sub_arbitrary(sum.digits[i], num.digits[i]) );
+    carry = ( sub_arbitrary(digits[i], carry) + sub_arbitrary(digits[i], num.digits[i]) );
   }
   if(carry)
   {
-    throw exception("Negative Number");
+    throw std::exception(runtime_error);
   }
 
   return *this;
