@@ -1,7 +1,7 @@
 #include "arbitrary.hpp"
 #include <iostream>
 
-int main(argc, argv[])
+int main(int argc, char ** argv)
 {
     Number test();
     test = 100;
