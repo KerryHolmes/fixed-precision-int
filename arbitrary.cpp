@@ -7,6 +7,7 @@
 * Purpose: TODO Write the purpose
 *********************************************************************/
 #include <cassert>
+#include <stdexcept>
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -206,7 +207,7 @@ Number Number::operator*( Number num)
   assert(base == num.base);
   Number temp(*this);
   Number product;
-  while(num.digits.size() > 1 && num[num.mst_sig_digit()] > 0)
+  while(num.digits.size() > 1 && num[num.mst_sig_dig()] > 0)
   {
     if(num.digits[0] % 2 == 1 )
     {
@@ -222,7 +223,7 @@ Number& Number::operator*=( Number num)
 {
   assert(base == num.base);
   Number product;
-  while(num.digits.size() > 1 && num[num.mst_sig_digit()] > 0)
+  while(num.digits.size() > 1 && num[num.mst_sig_dig()] > 0)
   {
     if(num.digits[0] % 2 == 1 )
     {
@@ -338,7 +339,7 @@ Number Number::multiply_by_two()
 {
   Number temp(*this);
   int carry = 0;
-  for(int i = 0; i < temp.digits.size(); ++i)
+  for(unsigned int i = 0; i < temp.digits.size(); ++i)
   {
     temp.digits[i] *= 2;
     carry = (temp.digits[i] += carry) / temp.base;
