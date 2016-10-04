@@ -61,11 +61,11 @@ class Number{
 
   Number& operator%=( Number num);
 
-  Number recur_modulus(Number& lhs, const Number& rhs);
+  Number recur_modulus(Number lhs, const Number& rhs);
 
-  Number recur_division( Number& lhs, const Number& rhs);
+  Number recur_division( Number lhs, const Number& rhs);
 
-  int mst_sig_bit();
+  int mst_sig_dig();
 
   int convert_decimal();
 

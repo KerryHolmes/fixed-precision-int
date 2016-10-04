@@ -61,7 +61,7 @@ Number Number::operator<<( int shift )
   Number result(*this);
   for(; shift > 0; --shift)
   {
-    result.digits.push_back(result.digits[result.mst_sig_bit()]);
+    result.digits.push_back(result.digits[result.mst_sig_dig()]);
     for(int i = result.digits.size()-2; i >= 0; --i)
      {
        result.digits[i+1] = result.digits[i];
@@ -90,7 +90,7 @@ Number Number::operator>>( int shift )
   Number result(*this);
   for(; shift > 0; --shift)
   {
-    for(int i = 1; i < digits.size(); ++i)
+    for(unsigned int i = 1; i < digits.size(); ++i)
     {
       result.digits[i-1] = result.digits[i];
     }
@@ -103,7 +103,7 @@ Number& Number::operator>>=( int shift )
 {
   for(; shift > 0; --shift)
   {
-    for(int i = 1; i < digits.size(); ++i)
+    for(unsigned int i = 1; i < digits.size(); ++i)
     {
       digits[i-1] = digits[i];
     }
@@ -153,7 +153,7 @@ Number Number::operator-( Number num)
   Number sum(*this);
   if(sum.digits.size() < std::min(digits.size(), num.digits.size()))
   {
-    throw std::exception(runtime_error);
+    throw std::exception(std::runtime_error);
   }
   else if(num.digits.size() < std::min(sum.digits.size(), num.digits.size()))
   {
@@ -168,7 +168,7 @@ Number Number::operator-( Number num)
   }
   if(carry)
   {
-    throw std::exception(runtime_error);
+    throw std::exception(std::runtime_error);
   }
 
   return sum;
@@ -180,9 +180,9 @@ Number& Number::operator-=( Number num)
   int carry = 0;
   if(digits.size() < std::min(digits.size(), num.digits.size()))
   {
-    throw std::exception(runtime_error);
+    throw std::exception(std::runtime_error);
   }
-  elseif(num.digits.size() < std::min(digits.size(), num.digits.size()))
+  else if(num.digits.size() < std::min(digits.size(), num.digits.size()))
   {
     for(unsigned int i = num.digits.size(); i < digits.size(); ++i)
     {
@@ -191,11 +191,11 @@ Number& Number::operator-=( Number num)
   }
   for(unsigned int i = 0; i < digits.size(); ++i)
   {
-    carry = ( sub_arbitrary(digits[i], carry) + sub_arbitrary(digits[i], num.digits[i]) );
+    carry = ( sub_arbitrary(digits[i], carry, base) + sub_arbitrary(digits[i], num.digits[i], base) );
   }
   if(carry)
   {
-    throw std::exception(runtime_error);
+    throw std::exception(std::runtime_error);
   }
 
   return *this;
@@ -267,17 +267,17 @@ Number& Number::operator%=(Number num)
   return *this;
 }
 
-Number Number::recur_modulus(Number& lhs, const Number& rhs)
+Number Number::recur_modulus(Number lhs, const Number& rhs)
 {
   if(lhs < rhs)
     return lhs;
   return recur_modulus(lhs-rhs, rhs);
 }
 
-Number Number::recur_division( Number& lhs, const Number& rhs)
+Number Number::recur_division( Number lhs, const Number& rhs)
 {
   if(lhs < rhs)
-    return Number(0);
+    return Number(0, lhs.base);
   return Number(1,lhs.base) + recur_division(lhs-rhs, rhs);
 }
 
@@ -313,15 +313,15 @@ int Number::convert_decimal()
 {
   int sum = 0;
   int power = 1;
-  for( int i = 0; i < digits.size(); i++)
+  for(unsigned int i = 0; i < digits.size(); i++)
   {
      sum += digits[i] * power;
-     power *= 2;
+     power *= base;
   }
   return sum;
 }
 
-Number& Number::double_num()
+void Number::double_num()
 {
   int carry = 0;
   for(int i = 0; i < digits.size(); ++i)
@@ -332,7 +332,6 @@ Number& Number::double_num()
   }
   if(carry)
     digits.push_back(carry);
-  return *this;
 }
 
 Number Number::multiply_by_two()
@@ -358,7 +357,7 @@ void Number::half()
     digits[i-1] += base * (digits[i] % 2);
   }
   digits[0] = digits[0] / 2;
-  while(digits[mst_sig_bit()] == 0)
+  while(digits[mst_sig_dig()] == 0)
   {
     digits.pop_back();
   }
@@ -373,7 +372,7 @@ Number Number::divide_by_two()
     temp.digits[i-1] += base * (temp.digits[i] % 2);
   }
   temp.digits[0] = temp.digits[0] / 2;
-  while(temp.digits[temp.mst_sig_bit()] == 0)
+  while(temp.digits[temp.mst_sig_dig()] == 0)
   {
     temp.digits.pop_back();
   }
@@ -383,11 +382,11 @@ Number Number::divide_by_two()
 bool operator==( const Number& lhs, const Number& rhs)
 {
   assert(lhs.base == rhs.base);
-  if(lhs.mst_sig_bit() != rhs.mst_sig_bit())
+  if(lhs.mst_sig_dig() != rhs.mst_sig_dig())
   {
     return false;
   }
-  for( int i = lhs.mst_sig_bit(); i >= 0; ++i)
+  for( int i = lhs.mst_sig_dig(); i >= 0; ++i)
   {
     if(lhs.digits[i] != rhs.digits[i])
     {
@@ -440,7 +439,7 @@ void Number::match_length( Number& lhs, Number& rhs)
          rhs.digits.push_back(0);
 }
 
-int Number::mst_sig_bit()
+int Number::mst_sig_dig()
 {
   return digits.size()-1;
 }
