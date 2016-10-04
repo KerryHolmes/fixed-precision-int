@@ -69,11 +69,11 @@ class Number{
 
   int convert_decimal();
 
-  Number& double();
+  void double();
 
   Number divide_by_two();
 
-  Number& half();
+  void half();
 
   Number multiply_by_two();
 

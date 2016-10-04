@@ -11,7 +11,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-#include "aribitrary.hpp"
+#include "arbitrary.hpp"
 
 Number::Number() //constructs the number to have a size 1 vector with the only digit at 0
 :digits(1,0), base(2) //The base defaults to being two
@@ -53,15 +53,16 @@ Number& Number::operator=( int decimal)
       digits[i] = decimal % base;
       decimal = decimal / base;
    }
+   return(*this);
 }
 
-Number Number::operator<<( const int shift )
+Number Number::operator<<( int shift )
 {
   Number result(*this);
-  for(shift; shift > 0; --shift)
+  for(; shift > 0; --shift)
   {
-    result.push_back(result[result.size()-1]);
-    for(int i = digit.size()-2; i >= 0; --i)
+    result.digits.push_back(result[result.size()-1]);
+    for(int i = digits.size()-2; i >= 0; --i)
      {
        result.digits[i+1] = result.digits[i];
      }
@@ -70,12 +71,12 @@ Number Number::operator<<( const int shift )
   return result;
 }
 
-Number& Number::operator<<=( const int shift )
+Number& Number::operator<<=( int shift )
 {
-  for(shift; shift > 0; --shift)
+  for(; shift > 0; --shift)
   {
     digits.push_back(digits[digits.size()-1]);
-    for(int i = digit.size()-2; i >= 0; --i)
+    for(int i = digits.size()-2; i >= 0; --i)
     {
       digits[i+1] = digits[i];
     }
@@ -84,10 +85,10 @@ Number& Number::operator<<=( const int shift )
   return *this;
 }
 
-Number Number::operator>>( const int shift )
+Number Number::operator>>( int shift )
 {
   Number result(*this);
-  for(shift; shift > 0; --shift)
+  for(; shift > 0; --shift)
   {
     for(int i = 1; i < digits.size(); ++i)
     {
@@ -98,9 +99,9 @@ Number Number::operator>>( const int shift )
   return result;
 }
 
-Number& Number::operator>>=( const int shift )
+Number& Number::operator>>=( int shift )
 {
-  for(shift; shift > 0; --shift)
+  for(; shift > 0; --shift)
   {
     for(int i = 1; i < digits.size(); ++i)
     {
@@ -116,10 +117,10 @@ Number Number::operator+( const Number& num)
   assert(base == num.base);
   int carry = 0;
   Number sum(*this);
-  match_length(temp, num);
+  match_length(sum, num);
   for(int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( add_arbitrary(sum.digits[i], carry) + add_arbitrary(sum.digits[i], num.digits[i]) );
+    carry = ( add_arbitrary(sum.digits[i], carry, sum.base) + add_arbitrary(sum.digits[i], num.digits[i], num.base) );
   }
 
   if(carry)
@@ -136,7 +137,7 @@ Number& Number::operator+=( const Number& num)
   match_length(*this, num);
   for(int i = 0; i < digits.size(); ++i)
   {
-    carry = ( add_arbitrary(digits[i], carry) + add_arbitrary(digits[i], num.digits[i]) );
+    carry = ( add_arbitrary(digits[i], carry, base) + add_arbitrary(digits[i], num.digits[i], num.base) );
   }
 
   if(carry)
