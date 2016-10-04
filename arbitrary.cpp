@@ -61,8 +61,8 @@ Number Number::operator<<( int shift )
   Number result(*this);
   for(; shift > 0; --shift)
   {
-    result.digits.push_back(result[result.size()-1]);
-    for(int i = digits.size()-2; i >= 0; --i)
+    result.digits.push_back(result[result.mst_sig_bit()]);
+    for(int i = result.digits.size()-2; i >= 0; --i)
      {
        result.digits[i+1] = result.digits[i];
      }
@@ -112,7 +112,7 @@ Number& Number::operator>>=( int shift )
   return *this;
 }
 
-Number Number::operator+( const Number& num)
+Number Number::operator+( Number num)
 {
   assert(base == num.base);
   int carry = 0;
@@ -130,7 +130,7 @@ Number Number::operator+( const Number& num)
 }
 
 
-Number& Number::operator+=( const Number& num)
+Number& Number::operator+=( Number num)
 {
   assert(base == num.base);
   int carry = 0;
@@ -146,7 +146,7 @@ Number& Number::operator+=( const Number& num)
   return *this;
 }
 
-Number Number::operator-( const Number& num)
+Number Number::operator-( Number num)
 {
   assert(base == num.base);
   int carry = 0;
@@ -174,7 +174,7 @@ Number Number::operator-( const Number& num)
   return sum;
 }
 
-Number Number::operator-=( const Number& num)
+Number Number::operator-=( Number num)
 {
   assert(base == num.base);
   int carry = 0;
@@ -201,7 +201,7 @@ Number Number::operator-=( const Number& num)
   return sum;
 }
 
-Number Number::operator*( const Number& num)
+Number Number::operator*( Number num)
 {
   assert(base == num.base);
   Number temp(*this);
@@ -218,7 +218,7 @@ Number Number::operator*( const Number& num)
   return product;
 }
 
-Number& Number::operator*=( const Number& num)
+Number& Number::operator*=( Number num)
 {
   assert(base == num.base);
   Number product;
@@ -235,7 +235,7 @@ Number& Number::operator*=( const Number& num)
   return *this;
 }
 
-Number Number::operator/(const Number& num)
+Number Number::operator/(Number num)
 {
   assert(base == num.base);
   Number temp(*this);
@@ -243,7 +243,7 @@ Number Number::operator/(const Number& num)
   return recur_division(temp, num);
 }
 
-Number& Number::operator/=(const Number& num)
+Number& Number::operator/=(Number num)
 {
   assert(base == num.base);
   match_length(*this, num);
@@ -251,7 +251,7 @@ Number& Number::operator/=(const Number& num)
   return *this;
 }
 
-Number Number::operator%(const Number& num)
+Number Number::operator%(Number num)
 {
   assert(base == num.base);
   Number temp(*this);
@@ -259,21 +259,21 @@ Number Number::operator%(const Number& num)
   return recur_modulus(temp, num);
 }
 
-Number& Number::operator%=(const Number& num)
+Number& Number::operator%=(Number num)
 {
   assert(base == num.base);
   match_length(*this, num);
   *this = recur_modulus(*this, num);
 }
 
-Number Number::recur_modulus(Number& lhs, const Number& rhs)
+Number Number::recur_modulus(Number& lhs, Number& rhs)
 {
   if(lhs < rhs)
     return lhs;
   return recur_modulus(lhs-rhs, rhs);
 }
 
-Number Number::recur_division( Number& lhs, const Number& rhs)
+Number Number::recur_division( Number& lhs, Number& rhs)
 {
   if(lhs < rhs)
     return 0;
@@ -438,4 +438,9 @@ void Number::match_length( Number& lhs, Number& rhs)
 
   while(rhs.digits.size() < lhs.digits.size())
          rhs.digits.push_back(0);
+}
+
+int Number::mst_sig_bit()
+{
+  return digits.size()-1;
 }
