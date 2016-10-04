@@ -18,7 +18,7 @@ Number::Number() //constructs the number to have a size 1 vector with the only d
 :digits(1,0), base(2) //The base defaults to being two
 {}
 
-Number::Number(Number const &c)//constructs a new number using the vector copy constructor
+Number::Number(const Number& c)//constructs a new number using the vector copy constructor
 :digits(c.digits), base(c.base)
 {}
 

@@ -21,7 +21,7 @@ class Number{
     int base; //The decimal value of the current base
     public:
   Number(); //constructs the number to have a 2048 vector with every digit at 0
-  Number(Number const &c);//constructs a new number using the vector copy constructor
+  Number(const Number& c);//constructs a new number using the vector copy constructor
 //Converts and stores a base 10 value in this number through repeated division
 //The logarithm is used to determine the most significant digit and stop writing there
 //The array is stored least significant to most significant, so there is no need to 
