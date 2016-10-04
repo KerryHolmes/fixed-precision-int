@@ -154,7 +154,7 @@ Number Number::operator-( Number num)
   Number sum(*this);
   if(sum.digits.size() < std::min(digits.size(), num.digits.size()))
   {
-    throw std::runtime_error("Negative Number Detected"));
+    throw std::runtime_error("Negative Number Detected");
   }
   else if(num.digits.size() < std::min(sum.digits.size(), num.digits.size()))
   {
@@ -169,7 +169,7 @@ Number Number::operator-( Number num)
   }
   if(carry)
   {
-    throw std::runtime_error("Negative Number Detected"));
+    throw std::runtime_error("Negative Number Detected");
   }
 
   return sum;
@@ -181,7 +181,7 @@ Number& Number::operator-=( Number num)
   int carry = 0;
   if(digits.size() < std::min(digits.size(), num.digits.size()))
   {
-    throw std::runtime_error("Negative Number Detected"));
+    throw std::runtime_error("Negative Number Detected");
   }
   else if(num.digits.size() < std::min(digits.size(), num.digits.size()))
   {
@@ -196,7 +196,7 @@ Number& Number::operator-=( Number num)
   }
   if(carry)
   {
-    throw std::runtime_error("Negative Number Detected"));
+    throw std::runtime_error("Negative Number Detected");
   }
 
   return *this;
@@ -383,7 +383,7 @@ Number Number::divide_by_two()
 bool operator==( const Number& lhs, const Number& rhs)
 {
   assert(lhs.base == rhs.base);
-  if(lhs.mst_sig_dig() != rhs.mst_sig_dig())
+  if(lhs.digits.size() != rhs.digits.size())
   {
     return false;
   }
