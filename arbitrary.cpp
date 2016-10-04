@@ -116,16 +116,7 @@ Number Number::operator+( const Number& num)
   assert(base == num.base);
   int carry = 0;
   Number sum(*this);
-  if(sum.digits.size() < std::min(sum.digits.size(), num.digits.size()))
-  {
-      for(int i = sum.digits.size(); i < num.digits.size(); ++i)
-         sum.digits.push_back(0);
-  }
-  elseif(num.digits.size() < std::min(sum.digits.size(), num.digits.size()))
-  {
-      for(int i = num.digits.size(); i < sum.digits.size(); ++i)
-         num.digits.push_back(0);
-  }
+  match_length(temp, num);
   for(int i = 0; i < sum.digits.size(); ++i)
   {
     carry = ( add_arbitrary(sum.digits[i], carry) + add_arbitrary(sum.digits[i], num.digits[i]) );
@@ -142,16 +133,7 @@ Number& Number::operator+=( const Number& num)
 {
   assert(base == num.base);
   int carry = 0;
-  if(digits.size() < std::min(digits.size(), num.digits.size()))
-  {
-      for(int i = digits.size(); i < num.digits.size(); ++i)
-         digits.push_back(0);
-  }
-  elseif(num.digits.size() < std::min(digits.size(), num.digits.size()))
-  {
-      for(int i = num.digits.size(); i < digits.size(); ++i)
-         num.digits.push_back(0);
-  }
+  match_length(*this, num);
   for(int i = 0; i < digits.size(); ++i)
   {
     carry = ( add_arbitrary(digits[i], carry) + add_arbitrary(digits[i], num.digits[i]) );
@@ -256,43 +238,45 @@ Number Number::operator/(const Number& num)
 {
   assert(base == num.base);
   Number temp(*this);
-  if(temp.digits.size() < std::min(temp.digits.size(), num.digits.size()))
-  {
-      for(int i = temp.digits.size(); i < num.digits.size(); ++i)
-         temp.digits.push_back(0);
-  }
-  elseif(num.digits.size() < std::min(temp.digits.size(), num.digits.size()))
-  {
-      for(int i = num.digits.size(); i < temp.digits.size(); ++i)
-         num.digits.push_back(0);
-  }
-
-  return recr_division(temp, num);
+  match_length(temp, num);
+  return recur_division(temp, num);
 }
 
 Number& Number::operator/=(const Number& num)
 {
   assert(base == num.base);
-  if(digits.size() < std::min(digits.size(), num.digits.size()))
-  {
-      for(int i = digits.size(); i < num.digits.size(); ++i)
-         digits.push_back(0);
-  }
-  elseif(num.digits.size() < std::min(digits.size(), num.digits.size()))
-  {
-      for(int i = num.digits.size(); i < digits.size(); ++i)
-         num.digits.push_back(0);
-  }
-
-  *this = recr_division(*this, num);
-  return this;
+  match_length(*this, num);
+  *this = recur_division(*this, num);
+  return *this;
 }
 
-Number Number::recr_division( Number& lhs, const Number& rhs)
+Number Number::operator%(cont Number& num)
+{
+  assert(base == num.base);
+  Number temp(*this);
+  match_length(temp, num);
+  return recur_modulus(temp, num);
+}
+
+Number Number::operator%(cont Number& num)
+{
+  assert(base == num.base);
+  match_length(*this, num);
+  *this = recur_modulus(*this, num);
+}
+
+Number Number::recur_modulus(Number& lhs, const Number& rhs)
+{
+  if(lhs < rhs)
+    return lhs;
+  return recur_modulus(lhs-rhs, rhs);
+}
+
+Number Number::recur_division( Number& lhs, const Number& rhs)
 {
   if(lhs < rhs)
     return 0;
-  return Number(1,lhs.base)+((x-y)/y)
+  return Number(1,lhs.base) + recur_division(lhs-rhs, rhs);
 }
 
 int add_arbitrary( int& lhs, const int& rhs, int base)
@@ -444,4 +428,13 @@ bool operator<=( const Number& lhs, const Number& rhs)
 bool operator>=( const Number& lhs, const Number& rhs)
 {
     return !(lhs < rhs);
+}
+
+void match_length( Number& lhs, Number& rhs)
+{
+  while(lhs.digits.size() < rhs.digits.size())
+         lhs.digits.push_back(0);
+
+  while(rhs.digits.size() < lhs.digits.size())
+         rhs.digits.push_back(0);
 }
