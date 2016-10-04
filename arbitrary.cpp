@@ -198,7 +198,7 @@ Number& Number::operator-=( Number num)
     throw exception("Negative Number");
   }
 
-  return sum;
+  return *this;
 }
 
 Number Number::operator*( Number num)
@@ -277,7 +277,7 @@ Number Number::recur_modulus(Number& lhs, const Number& rhs)
 Number Number::recur_division( Number& lhs, const Number& rhs)
 {
   if(lhs < rhs)
-    return 0;
+    return Number(0);
   return Number(1,lhs.base) + recur_division(lhs-rhs, rhs);
 }
 
@@ -350,7 +350,7 @@ Number Number::multiply_by_two()
   return temp;
 }
 
-Number& Number::half()
+void Number::half()
 {
   for(int i = digits.size(); i > 0; --i)
   {
@@ -362,7 +362,6 @@ Number& Number::half()
   {
     digits.pop_back();
   }
-  returns *this;
 }
 
 Number Number::divide_by_two()
@@ -378,7 +377,7 @@ Number Number::divide_by_two()
   {
     temp.digits.pop_back();
   }
-  returns temp;
+  return temp;
 }
 
 bool operator==( const Number& lhs, const Number& rhs)

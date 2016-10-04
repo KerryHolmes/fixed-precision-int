@@ -81,6 +81,7 @@ class Number{
 
  friend bool operator==( const Number& lhs, const Number& rhs);
  friend bool operator<( const Number& lhs, const Number& rhs);
+ friend bool operator==( const Number& lhs, const int rhs);
 
 };
 
@@ -88,7 +89,6 @@ bool operator>( const Number& lhs, const Number& rhs);
 bool operator!=( const Number& lhs, const Number& rhs);
 bool operator<=( const Number& lhs, const Number& rhs);
 bool operator>=( const Number& lhs, const Number& rhs);
-bool operator==( const Number& lhs, const int rhs);
 
 int add_arbitrary( int& lhs, const int& rhs, int base);
 int sub_arbitrary( int& lhs, const int& rhs, int base);
