@@ -69,7 +69,7 @@ class Number{
 
   int convert_decimal();
 
-  void double();
+  void double_num();
 
   Number divide_by_two();
 

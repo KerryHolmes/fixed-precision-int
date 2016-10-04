@@ -61,7 +61,7 @@ Number Number::operator<<( int shift )
   Number result(*this);
   for(; shift > 0; --shift)
   {
-    result.digits.push_back(result[result.mst_sig_bit()]);
+    result.digits.push_back(result.digits[result.mst_sig_bit()]);
     for(int i = result.digits.size()-2; i >= 0; --i)
      {
        result.digits[i+1] = result.digits[i];
@@ -153,9 +153,9 @@ Number Number::operator-( Number num)
   Number sum(*this);
   if(sum.digits.size() < std::min(digits.size(), num.digits.size()))
   {
-    throw exception("Negative Number");
+    throw std::exception("Negative Number");
   }
-  elseif(num.digits.size() < std::min(sum.digits.size(), num.digits.size()))
+  else if(num.digits.size() < std::min(sum.digits.size(), num.digits.size()))
   {
     for(int i = num.digits.size(); i < sum.digits.size(); ++i)
     {
@@ -164,7 +164,7 @@ Number Number::operator-( Number num)
   }
   for(int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( sub_binary(sum.digits[i], carry) + sub_binary(sum.digits[i], num.digits[i]) );
+    carry = ( sub_arbitrary(sum.digits[i], carry) + sub_arbitrary(sum.digits[i], num.digits[i]) );
   }
   if(carry)
   {
@@ -174,7 +174,7 @@ Number Number::operator-( Number num)
   return sum;
 }
 
-Number Number::operator-=( Number num)
+Number& Number::operator-=( Number num)
 {
   assert(base == num.base);
   int carry = 0;
@@ -212,7 +212,7 @@ Number Number::operator*( Number num)
     {
       product += temp;
     }
-    double();
+    temp.double_num();
     num.half();
   }
   return product;
@@ -228,7 +228,7 @@ Number& Number::operator*=( Number num)
     {
       product += *this;
     }
-    this->double();
+    this->double_num();
     num.half();
   }
   *this = product;
@@ -264,16 +264,17 @@ Number& Number::operator%=(Number num)
   assert(base == num.base);
   match_length(*this, num);
   *this = recur_modulus(*this, num);
+  return *this;
 }
 
-Number Number::recur_modulus(Number& lhs, Number& rhs)
+Number Number::recur_modulus(Number& lhs, const Number& rhs)
 {
   if(lhs < rhs)
     return lhs;
   return recur_modulus(lhs-rhs, rhs);
 }
 
-Number Number::recur_division( Number& lhs, Number& rhs)
+Number Number::recur_division( Number& lhs, const Number& rhs)
 {
   if(lhs < rhs)
     return 0;
@@ -320,7 +321,7 @@ int Number::convert_decimal()
   return sum;
 }
 
-Number& Number::double()
+Number& Number::double_num()
 {
   int carry = 0;
   for(int i = 0; i < digits.size(); ++i)
