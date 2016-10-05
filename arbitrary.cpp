@@ -293,7 +293,7 @@ int add_arbitrary( int& lhs, const int& rhs, int base)
   }
   else
   {
-    lhs += (lhs + rhs) - base;
+    lhs = (lhs + rhs) - base;
     std::cout<< "lhs: " << lhs << std::endl;
     return 1;
   }
