@@ -121,7 +121,7 @@ Number Number::operator+( Number num)
   match_length(sum, num);
   for(unsigned int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( add_arbitrary(sum.digits[i], carry, sum.base) + add_arbitrary(sum.digits[i], num.digits[i], num.base) );
+    carry = ( add_arbitrary(sum.digits[i], carry, sum.base) + add_arbitrary(sum.digits[i], num.digits[i], sum.base) );
   }
 
   if(carry)
@@ -138,7 +138,8 @@ Number& Number::operator+=( Number num)
   match_length(*this, num);
   for(unsigned int i = 0; i < digits.size(); ++i)
   {
-    carry = ( add_arbitrary(digits[i], carry, base) + add_arbitrary(digits[i], num.digits[i], num.base) );
+    carry = ( add_arbitrary(digits[i], carry, base) + add_arbitrary(digits[i], num.digits[i], base) );
+    std::cout<< "carry: " << carry << std::endl;
   }
 
   if(carry)
@@ -287,11 +288,13 @@ int add_arbitrary( int& lhs, const int& rhs, int base)
   if( base > (lhs + rhs)  )
   {
     lhs += rhs;
+    std::cout<< "lhs: " << lhs << std::endl;
     return 0;
   }
   else
   {
     lhs += (lhs + rhs) - base;
+    std::cout<< "lhs: " << lhs << std::endl;
     return 1;
   }
 }
