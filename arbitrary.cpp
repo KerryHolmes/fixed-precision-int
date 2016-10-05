@@ -27,7 +27,7 @@ Number::Number(const Number& c)//constructs a new number using the vector copy c
 //The array is stored least significant to most significant, so there is no need to 
 //reverse the result of the repeated division
 Number::Number(int decimal, int use_base)
-:digits(std::floor((std::log(decimal)/std::log(use_base))),0), base(use_base)
+:digits(std::floor((std::log(decimal)/std::log(use_base)))+1,0), base(use_base)
 {
    for( int i = 0; decimal > 0; ++i)
    {
@@ -48,7 +48,7 @@ Number& Number::operator=( const Number& c)
 //This assignment operator converts a decimal number to a type Number via repeated division as above
 Number& Number::operator=( int decimal)
 {
-  digits = std::vector<int>(std::floor((std::log(decimal)/std::log(base))),0);
+  digits = std::vector<int>(std::floor((std::log(decimal)/std::log(base)))+1,0);
    for( int i = 0; decimal > 0; ++i)
    {
       digits[i] = decimal % base;
