@@ -223,8 +223,8 @@ Number Number::operator*( Number num)
 Number& Number::operator*=( Number num)
 {
   assert(base == num.base);
-  Number product;
-  while(num.digits.size() > 1 && num.digits[num.mst_sig_dig()] > 0)
+  Number product(0,base);
+  while(num.digits.size() >= 1 && num.digits[num.mst_sig_dig()] > 0)
   {
     if(num.digits[0] % 2 == 1 )
     {
