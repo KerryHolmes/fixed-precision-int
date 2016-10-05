@@ -387,7 +387,7 @@ bool operator==( const Number& lhs, const Number& rhs)
   {
     return false;
   }
-  for( int i = lhs.digits.size()-1; i >= 0; ++i)
+  for( int i = lhs.digits.size()-1; i >= 0; --i)
   {
     if(lhs.digits[i] != rhs.digits[i])
     {
