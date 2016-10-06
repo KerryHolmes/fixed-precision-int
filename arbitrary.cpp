@@ -349,7 +349,8 @@ Number Number::multiply_by_two()
   for(unsigned int i = 0; i < temp.digits.size(); ++i)
   {
     temp.digits[i] *= 2;
-    carry = (temp.digits[i] += carry) / temp.base;
+    temp.digits[i] += carry;
+    carry = temp.digits[i] / temp.base;
     temp.digits[i] = temp.digits[i] % temp.base;
   }
   if(carry)
@@ -374,10 +375,10 @@ void Number::half()
 Number Number::divide_by_two()
 {
   Number temp(*this);
-  for(int i = digits.size(); i > 0; --i)
+  for(int i = temp.digits.size(); i > 0; --i)
   {
-    temp.digits[i] = temp.digits[i] / 2;
     temp.digits[i-1] += base * (temp.digits[i] % 2);
+    temp.digits[i] = temp.digits[i] / 2;
   }
   temp.digits[0] = temp.digits[0] / 2;
   while(temp.digits[temp.mst_sig_dig()] == 0)
