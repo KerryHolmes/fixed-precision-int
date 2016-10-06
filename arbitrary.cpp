@@ -145,7 +145,6 @@ Number& Number::operator+=( Number num)
   for(unsigned int i = 0; i < digits.size(); ++i)
   {
     carry = ( add_arbitrary(digits[i], carry, base) + add_arbitrary(digits[i], num.digits[i], base) );
-    std::cout<< "carry: " << carry << std::endl;
   }
 
   if(carry)
@@ -294,13 +293,11 @@ int add_arbitrary( int& lhs, const int& rhs, int base)
   if( base > (lhs + rhs)  )
   {
     lhs += rhs;
-    std::cout<< "lhs: " << lhs << std::endl;
     return 0;
   }
   else
   {
     lhs = (lhs + rhs) - base;
-    std::cout<< "lhs: " << lhs << std::endl;
     return 1;
   }
 }
