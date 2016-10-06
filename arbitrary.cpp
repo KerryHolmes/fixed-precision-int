@@ -213,7 +213,7 @@ Number Number::operator*( Number num)
   assert(base == num.base);
   Number temp(*this);
   Number product;
-  while(num.digits.size() > 1)
+  while(num.digits[num.mst_sig_dig()] != 0)
   {
     if(num.digits[0] % 2 == 1 )
     {
@@ -229,7 +229,7 @@ Number& Number::operator*=( Number num)
 {
   assert(base == num.base);
   Number product(0,base);
-  while(num.digits.size() >= 1)
+  while(num.digits[num.mst_sig_dig()] != 0)
   {
     if(num.digits[0] % 2 == 1 )
     {
@@ -366,7 +366,7 @@ void Number::half()
     digits[i] = digits[i] / 2;
   }
   digits[0] = digits[0] / 2;
-  while(digits[mst_sig_dig()] == 0)
+  while(digits[mst_sig_dig()] == 0 && digits.size() > 1)
   {
     digits.pop_back();
   }
@@ -381,7 +381,7 @@ Number Number::divide_by_two()
     temp.digits[i] = temp.digits[i] / 2;
   }
   temp.digits[0] = temp.digits[0] / 2;
-  while(temp.digits[temp.mst_sig_dig()] == 0)
+  while(temp.digits[temp.mst_sig_dig()] == 0 && temp.digits.size() > 1)
   {
     temp.digits.pop_back();
   }
