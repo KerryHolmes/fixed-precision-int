@@ -15,7 +15,8 @@ int main(int argc, char ** argv)
     std::cout << static_cast<bool>(test != test2)<<std::endl;
     std::cout << static_cast<bool>(test > test2)<<std::endl;
     std::cout << static_cast<bool>(test > test2)<<std::endl;
-    test += test2;
+    std::cout<<test.convert_decimal()<<std::endl;
+    test *= test2;
     std::cout<< test.convert_decimal()<<std::endl;
 
 
