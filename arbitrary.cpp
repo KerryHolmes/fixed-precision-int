@@ -285,7 +285,7 @@ Number Number::recur_division( Number lhs, const Number& rhs)
 {
   if(lhs < rhs)
     return Number(0, lhs.base);
-  return Number(1,lhs.base) + recur_division(lhs-rhs, rhs);
+  return (Number(1,lhs.base) + recur_division(lhs-rhs, rhs));
 }
 
 int add_arbitrary( int& lhs, const int& rhs, int base)
