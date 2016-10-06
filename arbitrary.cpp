@@ -426,7 +426,7 @@ bool operator>( const Number& lhs, const Number& rhs)
 
 bool operator<( const Number& lhs, const Number& rhs)
 {
-    return rhs < lhs;
+    return rhs > lhs;
 }
 
 bool operator<=( const Number& lhs, const Number& rhs)
