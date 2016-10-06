@@ -331,7 +331,8 @@ void Number::double_num()
   for(unsigned int i = 0; i < digits.size(); ++i)
   {
     digits[i] *= 2;
-    carry = (digits[i] += carry) / base;
+    digits[i] += carry;
+    carry = digits[i] / base;
     digits[i] = digits[i] % base;
   }
   if(carry)
@@ -357,8 +358,8 @@ void Number::half()
 {
   for(int i = digits.size(); i > 0; --i)
   {
-    digits[i] = digits[i] / 2;
     digits[i-1] += base * (digits[i] % 2);
+    digits[i] = digits[i] / 2;
   }
   digits[0] = digits[0] / 2;
   while(digits[mst_sig_dig()] == 0)
