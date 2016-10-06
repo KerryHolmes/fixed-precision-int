@@ -236,7 +236,7 @@ Number& Number::operator*=( Number num)
     {
       product += *this;
     }
-    this->double_num();
+    double_num();
     num.half();
   }
   *this = product;
