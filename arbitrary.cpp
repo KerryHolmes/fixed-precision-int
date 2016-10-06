@@ -417,14 +417,14 @@ bool operator!=( const Number& lhs, const Number& rhs)
   return !(lhs == rhs);
 }
 
-bool operator<( const Number& lhs, const Number& rhs)
+bool operator>( const Number& lhs, const Number& rhs)
 {
   assert(lhs.base == rhs.base);
   return std::lexicographical_compare(lhs.digits.begin(), lhs.digits.end(),
                                       rhs.digits.begin(), rhs.digits.end());
 }
 
-bool operator>( const Number& lhs, const Number& rhs)
+bool operator<( const Number& lhs, const Number& rhs)
 {
     return rhs < lhs;
 }
