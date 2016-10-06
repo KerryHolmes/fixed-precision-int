@@ -158,11 +158,11 @@ Number Number::operator-( Number num)
   assert(base == num.base);
   int carry = 0;
   Number sum(*this);
-  if(sum.digits.size() < std::min(digits.size(), num.digits.size()))
+  if(sum.digits.size() <  num.digits.size())
   {
     throw std::runtime_error("Negative Number Detected");
   }
-  else if(num.digits.size() < std::min(sum.digits.size(), num.digits.size()))
+  else if(num.digits.size() < sum.digits.size())
   {
     for(unsigned int i = num.digits.size(); i < sum.digits.size(); ++i)
     {
@@ -173,7 +173,7 @@ Number Number::operator-( Number num)
   {
     carry = ( sub_arbitrary(sum.digits[i], carry, sum.base) + sub_arbitrary(sum.digits[i], num.digits[i], sum.base) );
   }
-  if(carry)
+  if(carry > 0)
   {
     throw std::runtime_error("Negative Number Detected");
   }
@@ -185,11 +185,11 @@ Number& Number::operator-=( Number num)
 {
   assert(base == num.base);
   int carry = 0;
-  if(digits.size() < std::min(digits.size(), num.digits.size()))
+  if(digits.size() <  num.digits.size())
   {
     throw std::runtime_error("Negative Number Detected");
   }
-  else if(num.digits.size() < std::min(digits.size(), num.digits.size()))
+  else if(num.digits.size() < digits.size() )
   {
     for(unsigned int i = num.digits.size(); i < digits.size(); ++i)
     {
@@ -200,7 +200,7 @@ Number& Number::operator-=( Number num)
   {
     carry = ( sub_arbitrary(digits[i], carry, base) + sub_arbitrary(digits[i], num.digits[i], base) );
   }
-  if(carry)
+  if(carry > 0)
   {
     throw std::runtime_error("Negative Number Detected");
   }
