@@ -27,13 +27,19 @@ Number::Number(const Number& c)//constructs a new number using the vector copy c
 //The array is stored least significant to most significant, so there is no need to 
 //reverse the result of the repeated division
 Number::Number(int decimal, int use_base)
-:digits(std::floor((std::log(decimal)/std::log(use_base)))+1,0), base(use_base)
+:digits(), base(use_base)
 {
+   if(decimal == 0)
+    digits = std::vector<int>(0,1);
+  else
+  {
+   digits = std::vector<int>(std::floor((std::log(decimal)/std::log(use_base)))+1,0);
    for( int i = 0; decimal > 0; ++i)
    {
       digits[i] = decimal % base;
       decimal = decimal / base;
    }
+  }
 }
 
 //Copy assignment operatior works by using the vector assignment operator to replace the
