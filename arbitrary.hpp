@@ -41,6 +41,8 @@ class Number{
 
   Number& operator>>=( int shift);
 
+  int& operator[](int place);
+
   Number operator+( Number num);
 
   Number& operator+=( Number num);

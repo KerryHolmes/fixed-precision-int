@@ -420,8 +420,23 @@ bool operator!=( const Number& lhs, const Number& rhs)
 bool operator>( const Number& lhs, const Number& rhs)
 {
   assert(lhs.base == rhs.base);
-  return std::lexicographical_compare(lhs.digits.begin(), lhs.digits.end(),
-                                      rhs.digits.begin(), rhs.digits.end());
+  if( lhs.digits.size() < rhs.digits.size() )
+  {
+    return true;
+  }
+  else if(lhs.digits.size() > rhs.digits.size())
+  {
+     return false;
+  }
+  for(int i = lhs.digits.size()-1; i >= 0; --i)
+  {
+    if(lhs.digits[i] < rhs.digits[i])
+      return true;
+    if(lhs.digits[i] > rhs.digits[i])
+     return false;
+  }
+  return false;
+
 }
 
 bool operator<( const Number& lhs, const Number& rhs)
@@ -451,4 +466,9 @@ void Number::match_length( Number& lhs, Number& rhs)
 int Number::mst_sig_dig()
 {
   return digits.size()-1;
+}
+
+int& operator[](int place)
+{
+  return digits[place];
 }
