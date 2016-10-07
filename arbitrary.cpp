@@ -417,7 +417,7 @@ bool operator!=( const Number& lhs, const Number& rhs)
   return !(lhs == rhs);
 }
 
-bool operator>( const Number& lhs, const Number& rhs)
+bool operator<( const Number& lhs, const Number& rhs)
 {
   assert(lhs.base == rhs.base);
   if( lhs.digits.size() < rhs.digits.size() )
@@ -439,9 +439,9 @@ bool operator>( const Number& lhs, const Number& rhs)
 
 }
 
-bool operator<( const Number& lhs, const Number& rhs)
+bool operator>( const Number& lhs, const Number& rhs)
 {
-    return rhs > lhs;
+    return rhs < lhs;
 }
 
 bool operator<=( const Number& lhs, const Number& rhs)

@@ -82,12 +82,12 @@ class Number{
   void match_length( Number& lhs, Number& rhs);
 
  friend bool operator==( const Number& lhs, const Number& rhs);
- friend bool operator>( const Number& lhs, const Number& rhs);
+ friend bool operator<( const Number& lhs, const Number& rhs);
  friend bool operator==( const Number& lhs, const int rhs);
 
 };
 
-bool operator<( const Number& lhs, const Number& rhs);
+bool operator>( const Number& lhs, const Number& rhs);
 bool operator!=( const Number& lhs, const Number& rhs);
 bool operator<=( const Number& lhs, const Number& rhs);
 bool operator>=( const Number& lhs, const Number& rhs);
