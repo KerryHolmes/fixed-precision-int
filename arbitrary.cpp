@@ -365,7 +365,7 @@ Number Number::multiply_by_two()
 
 void Number::half()
 {
-  for(int i = digits.size(); i > 0; --i)
+  for(int i = mst_sig_dig(); i > 0; --i)
   {
     digits[i-1] += base * (digits[i] % 2);
     digits[i] = digits[i] / 2;
@@ -380,7 +380,7 @@ void Number::half()
 Number Number::divide_by_two()
 {
   Number temp(*this);
-  for(int i = temp.digits.size(); i > 0; --i)
+  for(int i = temp.mst_sig_dig(); i > 0; --i)
   {
     temp.digits[i-1] += base * (temp.digits[i] % 2);
     temp.digits[i] = temp.digits[i] / 2;
