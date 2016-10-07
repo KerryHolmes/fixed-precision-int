@@ -54,12 +54,17 @@ Number& Number::operator=( const Number& c)
 //This assignment operator converts a decimal number to a type Number via repeated division as above
 Number& Number::operator=( int decimal)
 {
-  digits = std::vector<int>(std::floor((std::log(decimal)/std::log(base)))+1,0);
+  if(decimal == 0)
+    digits = std::vector<int>(0,1);
+  else
+  {
+   digits = std::vector<int>(std::floor((std::log(decimal)/std::log(base)))+1,0);
    for( int i = 0; decimal > 0; ++i)
    {
       digits[i] = decimal % base;
       decimal = decimal / base;
    }
+  }
    return(*this);
 }
 
