@@ -217,7 +217,7 @@ Number Number::operator*( Number num)
 {
   assert(base == num.base);
   Number temp(*this);
-  Number product;
+  Number product(0,base);
   while(num.digits[num.mst_sig_dig()] != 0)
   {
     if(num.digits[0] % 2 == 1 )
