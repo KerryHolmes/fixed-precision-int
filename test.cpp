@@ -20,7 +20,10 @@ int main(int argc, char ** argv)
     std::cout<< test.convert_decimal()<<std::endl;
     test /= test2;
     std::cout<< test.convert_decimal()<<std::endl;
-
+    test += test2;
+    std::cout<< test.convert_decimal()<<std::endl;
+    test -= test2;
+    std::cout<< test.convert_decimal()<<std::endl;
 
     return 0;
 }
