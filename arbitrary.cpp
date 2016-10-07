@@ -468,7 +468,7 @@ int Number::mst_sig_dig()
   return digits.size()-1;
 }
 
-int& operator[](int place)
+int& Number::operator[](int place)
 {
   return digits[place];
 }
