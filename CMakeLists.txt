@@ -3,7 +3,7 @@
 project(rational CXX)
 
 
-# Require make version 2.8 minimum
+# Require make version 3.0 minimum
 cmake_minimum_required(VERSION 3.0)
 
 
@@ -15,10 +15,10 @@ set(CMAKE_CXX_FLAGS "-Wall -std=c++11 ${SAN_FLAGS}")
 
 
 # Declares the executable to be built from source files
-add_executable(test test.cpp arbitrary.cpp number.cpp)
+add_executable(test-num test.cpp arbitrary.cpp)
 
 
-set(files arbitrary.hpp arbitrary.cpp number.hpp number.cpp)
+set(files arbitrary.hpp arbitrary.cpp)
 # This creates a new target for the make program. After
 # including this, you can write:
 #

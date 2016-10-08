@@ -19,7 +19,9 @@
 class Number{
     std::vector<int> digits; //The digits of the number are stored in this vector
     int base; //The decimal value of the current base
-    public:
+    int& operator[](int place);
+
+public:
   Number(); //constructs the number to have a 2048 vector with every digit at 0
   Number(const Number& c);//constructs a new number using the vector copy constructor
 //Converts and stores a base 10 value in this number through repeated division
@@ -40,8 +42,6 @@ class Number{
   Number operator>>( int shift);
 
   Number& operator>>=( int shift);
-
-  int& operator[](int place);
 
   Number operator+( Number num);
 

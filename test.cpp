@@ -1,5 +1,4 @@
 #include "arbitrary.hpp"
-#include "arbitrary.cpp"
 #include <iostream>
 
 int main(int argc, char ** argv)
