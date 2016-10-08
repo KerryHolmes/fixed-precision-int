@@ -485,12 +485,12 @@ int& Number::operator[](int place)
   return digits[place];
 }
 
-int& Number::operator[](int place) const
+int Number::operator[](int place) const
 {
   return digits[place];
 }
 
-std::istream& operator>>(std::istream &in, Number& num)
+std::istream& operator>>(std::istream &in, const Number& num)
 {
   int temp;
   num.digits.clear();
@@ -506,7 +506,7 @@ std::istream& operator>>(std::istream &in, Number& num)
   std::reverse(num.digits.begin(), num.digits.end());
   return in;
 }
- std::ostream& operator<<(std::ostream &out, Number& num)
+ std::ostream& operator<<(std::ostream &out, const Number& num)
 {
   for(int i = num.mst_sig_dig(); i >= 0; --i)
   {

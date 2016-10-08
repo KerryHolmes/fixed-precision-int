@@ -17,7 +17,7 @@ class Number{
     std::vector<int> digits; //The digits of the number are stored in this vector
     int base; //The decimal value of the current base
     int& operator[](int place);
-    int& operator[](int place) const;
+    int operator[](int place) const;
 
 public:
   Number(); //constructs the number to have a 2048 vector with every digit at 0
