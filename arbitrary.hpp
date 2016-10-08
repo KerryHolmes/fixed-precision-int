@@ -10,11 +10,8 @@
 #ifndef NUMBER_HPP
 #define NUMBER_HPP
 
-#include <cassert>
 #include <iostream>
 #include <vector>
-#include <cmath>
-#include <algorithm>
 
 class Number{
     std::vector<int> digits; //The digits of the number are stored in this vector
@@ -84,6 +81,8 @@ public:
  friend bool operator==( const Number& lhs, const Number& rhs);
  friend bool operator<( const Number& lhs, const Number& rhs);
  friend bool operator==( const Number& lhs, const int rhs);
+ friend std::istream& operator>>(std::istream &in, Number& num);
+ friend std::ostream& operator<<(std::ostream &out, Number& num);
 
 };
 

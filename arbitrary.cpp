@@ -12,6 +12,8 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <sstream>
+#include <string>
 #include "arbitrary.hpp"
 
 Number::Number() //constructs the number to have a size 1 vector with the only digit at 0
@@ -476,4 +478,15 @@ int Number::mst_sig_dig()
 int& Number::operator[](int place)
 {
   return digits[place];
+}
+
+std::istream& operator>>(std::istream &in, Number& num)
+{
+  return in;
+}
+ std::ostream& operator<<(std::ostream &out, Number& num)
+{
+  for(int i = num.mst_sig_dig(); i >= 0; --i)
+     out << num[i];
+  return out;
 }
