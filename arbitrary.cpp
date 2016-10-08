@@ -482,11 +482,26 @@ int& Number::operator[](int place)
 
 std::istream& operator>>(std::istream &in, Number& num)
 {
+  int temp;
+  num.digits.clear();
+  in >> num.base;
+  std::string line;
+  std::getline(in, line);
+  std::istringstream stream(line);
+  while(stream >> temp)
+  {
+   assert(temp < num.base);
+   num.digits.push_back(temp);
+  }
+  std::reverse(num.digits.begin(), num.digits.end());
   return in;
 }
  std::ostream& operator<<(std::ostream &out, Number& num)
 {
   for(int i = num.mst_sig_dig(); i >= 0; --i)
+  {
      out << num[i];
+     out << " ";
+  }
   return out;
 }
