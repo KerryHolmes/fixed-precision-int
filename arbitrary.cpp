@@ -475,7 +475,17 @@ int Number::mst_sig_dig()
   return digits.size()-1;
 }
 
+int Number::mst_sig_dig() const
+{
+  return digits.size()-1;
+}
+
 int& Number::operator[](int place)
+{
+  return digits[place];
+}
+
+int& Number::operator[](int place) const
 {
   return digits[place];
 }

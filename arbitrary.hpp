@@ -17,6 +17,7 @@ class Number{
     std::vector<int> digits; //The digits of the number are stored in this vector
     int base; //The decimal value of the current base
     int& operator[](int place);
+    int& operator[](int place) const;
 
 public:
   Number(); //constructs the number to have a 2048 vector with every digit at 0
@@ -66,6 +67,8 @@ public:
 
   int mst_sig_dig();
 
+  int mst_sig_dig() const;
+
   int convert_decimal();
 
   void double_num();
@@ -81,9 +84,9 @@ public:
  friend bool operator==( const Number& lhs, const Number& rhs);
  friend bool operator<( const Number& lhs, const Number& rhs);
  friend bool operator==( const Number& lhs, const int rhs);
- friend std::istream& operator>>(std::istream &in, Number& num);
- friend std::ostream& operator<<(std::ostream &out, Number& num);
-
+ friend std::istream& operator>>(std::istream &in, const Number& num);
+ friend std::ostream& operator<<(std::ostream &out, const Number& num);
+ 
 };
 
 bool operator>( const Number& lhs, const Number& rhs);
