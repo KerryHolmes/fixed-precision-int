@@ -490,7 +490,7 @@ int Number::operator[](int place) const
   return digits[place];
 }
 
-std::istream& operator>>(std::istream &in, const Number& num)
+std::istream& operator>>(std::istream &in, Number& num)
 {
   int temp;
   num.digits.clear();

@@ -84,7 +84,7 @@ public:
  friend bool operator==( const Number& lhs, const Number& rhs);
  friend bool operator<( const Number& lhs, const Number& rhs);
  friend bool operator==( const Number& lhs, const int rhs);
- friend std::istream& operator>>(std::istream &in, const Number& num);
+ friend std::istream& operator>>(std::istream &in, Number& num);
  friend std::ostream& operator<<(std::ostream &out, const Number& num);
  
 };
