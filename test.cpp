@@ -10,7 +10,6 @@ int main(int argc, char ** argv)
     std::cout<< test.convert_decimal()<<std::endl;
     std::cout<< test2.convert_decimal()<<std::endl;
     std::cout << static_cast<bool>(test == test)<<std::endl;
-    std::cout << static_cast<bool>(test <= 100)<<std::endl;
     std::cout << static_cast<bool>(test == test2)<<std::endl;
     std::cout << static_cast<bool>(test > test2)<<std::endl;
     std::cout << static_cast<bool>(test < test2)<<std::endl;
