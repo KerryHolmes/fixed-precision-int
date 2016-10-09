@@ -133,13 +133,13 @@ public:
   void double_num();
 //Does the same as the function above, but returns a temporary and does not 
 //modify the number used.
-  Number divide_by_two();
+  Number multiply_by_two();
 //Divides a number of any base by two and returns nothing. This does change
 //the number it is called on. This is done using the properties of integers.
   void half();
 //Does the same as the function above, but returns a temporary and does not 
 //modify the number used.
-  Number multiply_by_two();
+  Number divide_by_two();
 //Makes two numbers have the same length by padding one of them with 0
 //This is done temporarily to support math operators on numbers of different
 //lengths.

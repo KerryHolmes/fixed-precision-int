@@ -23,6 +23,16 @@
 #include <string>
 #include "arbitrary.hpp"
 
+int& Number::operator[]( int place)
+{
+  return digits[place];
+}
+
+int Number::operator[]( int place) const
+{
+  return digits[place];
+}
+
 Number::Number() //constructs the number to have a size 1 vector with the only digit at 0
 :digits(1,0), base(2) //The base defaults to being two
 {}
@@ -285,32 +295,14 @@ Number Number::recur_division( Number lhs, const Number& rhs)
   return (Number(1,lhs.base) + recur_division(lhs-rhs, rhs));
 }
 
-int add_arbitrary( int& lhs, const int& rhs, int base)
+int Number::mst_sig_dig()
 {
-  if( base > (lhs + rhs)  )
-  {
-    lhs += rhs;
-    return 0;
-  }
-  else
-  {
-    lhs = (lhs + rhs) - base;
-    return 1;
-  }
+  return digits.size()-1;
 }
 
-int sub_arbitrary( int& lhs, const int& rhs, int base)
+int Number::mst_sig_dig() const
 {
-  if( 0 > (lhs - rhs) )
-  {
-    lhs = (base + lhs) - rhs;
-    return 1;
-  }
-  else
-  {
-    lhs -= rhs;
-    return 0;
-  }
+  return digits.size()-1;
 }
 
 int Number::convert_decimal()
@@ -385,6 +377,44 @@ Number Number::divide_by_two()
   return temp;
 }
 
+void Number::match_length( Number& lhs, Number& rhs)
+{
+  while(lhs.digits.size() < rhs.digits.size())
+         lhs.digits.push_back(0);
+
+  while(rhs.digits.size() < lhs.digits.size())
+         rhs.digits.push_back(0);
+}
+
+std::istream& operator>>(std::istream &in, Number& num)
+{
+  int temp;
+  num.digits.clear();
+  in >> num.base;
+  std::string line;
+  std::getline(in, line);
+  std::istringstream stream(line);
+  while(stream >> temp)
+  {
+   assert(temp < num.base);
+   num.digits.push_back(temp);
+  }
+  std::reverse(num.digits.begin(), num.digits.end());
+  while(num[num.mst_sig_dig()] == 0)
+       num.digits.pop_back();
+  return in;
+}
+
+ std::ostream& operator<<(std::ostream &out, const Number& num)
+{
+  for(int i = num.mst_sig_dig(); i >= 0; --i)
+  {
+     out << num[i];
+     out << " ";
+  }
+  return out;
+}
+
 bool operator==( const Number& lhs, const Number& rhs)
 {
   assert(lhs.base == rhs.base);
@@ -400,18 +430,6 @@ bool operator==( const Number& lhs, const Number& rhs)
     }
   }
   return true;
-}
-
-bool operator==( const Number& lhs, const int rhs)
-{
-  Number temp(rhs, lhs.base);
-  return lhs == temp;
-
-}
-
-bool operator!=( const Number& lhs, const Number& rhs)
-{
-  return !(lhs == rhs);
 }
 
 bool operator<( const Number& lhs, const Number& rhs)
@@ -433,7 +451,18 @@ bool operator<( const Number& lhs, const Number& rhs)
      return false;
   }
   return false;
+}
 
+bool operator==( const Number& lhs, const int rhs)
+{
+  Number temp(rhs, lhs.base);
+  return lhs == temp;
+
+}
+
+bool operator!=( const Number& lhs, const Number& rhs)
+{
+  return !(lhs == rhs);
 }
 
 bool operator>( const Number& lhs, const Number& rhs)
@@ -451,59 +480,30 @@ bool operator>=( const Number& lhs, const Number& rhs)
     return !(lhs < rhs);
 }
 
-void Number::match_length( Number& lhs, Number& rhs)
+int add_arbitrary( int& lhs, const int& rhs, int base)
 {
-  while(lhs.digits.size() < rhs.digits.size())
-         lhs.digits.push_back(0);
-
-  while(rhs.digits.size() < lhs.digits.size())
-         rhs.digits.push_back(0);
-}
-
-int Number::mst_sig_dig()
-{
-  return digits.size()-1;
-}
-
-int Number::mst_sig_dig() const
-{
-  return digits.size()-1;
-}
-
-int& Number::operator[]( int place)
-{
-  return digits[place];
-}
-
-int Number::operator[]( int place) const
-{
-  return digits[place];
-}
-
-std::istream& operator>>(std::istream &in, Number& num)
-{
-  int temp;
-  num.digits.clear();
-  in >> num.base;
-  std::string line;
-  std::getline(in, line);
-  std::istringstream stream(line);
-  while(stream >> temp)
+  if( base > (lhs + rhs)  )
   {
-   assert(temp < num.base);
-   num.digits.push_back(temp);
+    lhs += rhs;
+    return 0;
   }
-  std::reverse(num.digits.begin(), num.digits.end());
-  while(num[num.mst_sig_dig()] == 0)
-       num.digits.pop_back();
-  return in;
-}
- std::ostream& operator<<(std::ostream &out, const Number& num)
-{
-  for(int i = num.mst_sig_dig(); i >= 0; --i)
+  else
   {
-     out << num[i];
-     out << " ";
+    lhs = (lhs + rhs) - base;
+    return 1;
   }
-  return out;
+}
+
+int sub_arbitrary( int& lhs, const int& rhs, int base)
+{
+  if( 0 > (lhs - rhs) )
+  {
+    lhs = (base + lhs) - rhs;
+    return 1;
+  }
+  else
+  {
+    lhs -= rhs;
+    return 0;
+  }
 }
