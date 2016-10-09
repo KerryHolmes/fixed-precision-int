@@ -171,7 +171,7 @@ Number& Number::operator>>=(unsigned int shift )
 //After that is a branch and possibly a call to push_back, which are both 
 //constant time, unless a reallocation is required. In that case, push_back 
 //would execute in linear time. Overall this would yield 
-//O(1)+O(n)+O(n-m)+O(n)+O(1)+O(n). The overall analysis thus yields O(n).
+//O(1)+O(n)+O(|n-m|)+O(n)+O(1)+O(n). The overall analysis thus yields O(n).
 Number Number::operator+( Number num)
 {
   assert(base == num.base);
@@ -212,7 +212,7 @@ Number& Number::operator+=( Number num)
 //This will execute using an assignment, an integer addition and two calls
 //to the sub arbitrary function which, from its analysis below executes in
 //constant time. The result of that is a linear complexity loop. 
-//This results in O(1)+O(n)+O(n)+O(n-m)+O(n)
+//This results in O(1)+O(n)+O(n)+O(|n-m|)+O(n)
 //The overall analysis thus yields O(n).
 Number Number::operator-( Number num)
 {
@@ -251,7 +251,14 @@ Number& Number::operator-=( Number num)
   }
   return *this;
 }
-
+//The operator starts with a constant time comparison. It is followed by two
+//number constructions. The first is a copy construction which is linear, and 
+//the other is a construction of 0 wihch is constant time. Next, the while loop
+//will execute until the right operand is 0. This will occur log2(v) times,
+//where v is the value of the right operand. Inside of this loop, there is an 
+//addition, a call to double_num, and a call to half. All of which run in linear
+//time. There is also a comparison which is constant. The final equation works
+//into O(1)+O(n)+O(1)+O(log2(v)*(n+n+n+1)). This simplifies into O(log2(v)*n)
 Number Number::operator*( Number num)
 {
   assert(base == num.base);
@@ -268,7 +275,8 @@ Number Number::operator*( Number num)
   }
   return product;
 }
-
+//The analysis of this is largely the same as the operator above, minus one 
+//initial copy operation. Resulting in a runtime of 
 Number& Number::operator*=( Number num)
 {
   assert(base == num.base);
@@ -285,7 +293,16 @@ Number& Number::operator*=( Number num)
   *this = product;
   return *this;
 }
-
+//This starts with a constant time comparison, and a linear construction of
+//a temporary number. After that, the match_length function is called which
+//will run in O(|n-m|) as shown in its own analysis below. Next, the recur_
+//division function is called which based on its own analysis will run in 
+//O(lhs/rhs(n)). The result of this operation will then be copied back into
+//the temporary number. Finally the most significant digit of the number will
+//be removed until it is a non zero number, or there is only one number left.
+//This obviously can only occur n times in the worst case making it a linear 
+//operation. The final equation is O(1)+O(n)+O(|n-m|)+O(lhs/rhs(n))+O(n)+O(n)
+//The dominating term is O(lhs/rhs(n)) where lhs > rhs and O(n) otherwise.
 Number Number::operator/(Number num)
 {
   assert(base == num.base);
@@ -296,7 +313,11 @@ Number Number::operator/(Number num)
       temp.digits.pop_back();
   return temp;
 }
-
+//The analysis of this operator is roughly the same as the above.
+//The difference is that there is no temporary copy constructed.
+//Overall this will result in the runtime analysis of the recur_modulus
+//function carrying thorugh, resulting in O(lhs/rhs(n)), where lhs > rhs 
+//and O(n) otherwise.
 Number& Number::operator/=(Number num)
 {
   assert(base == num.base);
@@ -306,7 +327,16 @@ Number& Number::operator/=(Number num)
       digits.pop_back();
   return *this;
 }
-
+//This starts with a constant time comparison, and a linear construction of
+//a temporary number. After that, the match_length function is called which
+//will run in O(|n-m|) as shown in its own analysis below. Next, the recur_
+//modulus function is called which based on its own analysis will run in 
+//O(lhs/rhs(n)). The result of this operation will then be copied back into
+//the temporary number. Finally the most significant digit of the number will
+//be removed until it is a non zero number, or there is only one number left.
+//This obviously can only occur n times in the worst case making it a linear 
+//operation. The final equation is O(1)+O(n)+O(|n-m|)+O(lhs/rhs(n))+O(n)+O(n)
+//The dominating term is O(lhs/rhs(n)) where lhs > rhs and O(n) otherwise.
 Number Number::operator%(Number num)
 {
   assert(base == num.base);
@@ -317,7 +347,11 @@ Number Number::operator%(Number num)
       temp.digits.pop_back();
   return temp;
 }
-
+//The analysis of this operator is roughly the same as the above.
+//The difference is that there is no temporary copy constructed.
+//Overall this will result in the runtime analysis of the recur_modulus
+//function carrying thorugh, resulting in O(lhs/rhs(n)), where lhs > rhs 
+//and O(n) otherwise.
 Number& Number::operator%=(Number num)
 {
   assert(base == num.base);
@@ -331,7 +365,7 @@ Number& Number::operator%=(Number num)
 //on the difference in value of lhs and rhs. The number of recusrive calls is 
 //the same as lhs / rhs. For each call there is a single subtraction which,
 //by its analysis below, is linear. This causes a runtime complexity of
-//O(lhs/rhs(n))
+//O(lhs/rhs(n)).
 Number Number::recur_modulus(Number lhs, const Number& rhs)
 {
   if(lhs < rhs)
@@ -343,7 +377,7 @@ Number Number::recur_modulus(Number lhs, const Number& rhs)
 //operands. The number of times it will run is equivalent to its value. It will
 //be called lhs/rhs times. On each recursive call, there will be a constant time
 //Number construction, an addition and a subtraction. This results in a time of
-//O(lhs/rhs(n+n+1))
+//O(lhs/rhs(n+n+1)) which simplifies to O(lhs/rhs(n)).
 Number Number::recur_division( Number lhs, const Number& rhs)
 {
   if(lhs < rhs)
@@ -446,7 +480,7 @@ Number Number::divide_by_two()
 //This operator executes in linear time based on the difference in sizes of the
 //numbers passed in. This is because the operation in each loop will run in 
 //constant time, and only one loop will run. The loop that runs will do so
-//until the two lenghts match. Thus the complexity is of O(n-m), where n and m
+//until the two lenghts match. Thus the complexity is of O(|n-m|), where n and m
 //are the sizes of the left and right operands respectively.
 void Number::match_length( Number& lhs, Number& rhs)
 {
