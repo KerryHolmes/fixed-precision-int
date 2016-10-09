@@ -44,7 +44,7 @@ Number::Number(unsigned int decimal, unsigned int use_base)
   {
    digits = std::vector<unsigned int>(std::floor((std::log(decimal)
                               /std::log(use_base)))+1,0);
-   for( int i = 0; decimal > 0; ++i)
+   for(unsigned int i = 0; decimal > 0; ++i)
    {
       digits[i] = decimal % base;
       decimal = decimal / base;
@@ -310,7 +310,7 @@ unsigned int Number::convert_decimal()
 {
   unsigned int sum = 0;
   unsigned int power = 1;
-  for(unsigned int i = 0; i < digits.size(); i++)
+  for(unsigned int i = 0; i < digits.size(); ++i)
   {
      sum += digits[i] * power;
      power *= base;
@@ -385,9 +385,9 @@ bool operator==( const Number& lhs, const Number& rhs)
   {
     return false;
   }
-  for(unsigned int i = lhs.digits.size()-1; i >= 0; --i)
+  for(unsigned int i = lhs.digits.size(); i > 0; --i)
   {
-    if(lhs.digits[i] != rhs.digits[i])
+    if(lhs.digits[i-1] != rhs.digits[i-1])
     {
        return false;
     }
@@ -418,11 +418,11 @@ bool operator<( const Number& lhs, const Number& rhs)
   {
      return false;
   }
-  for(int i = lhs.digits.size()-1; i >= 0; --i)
+  for(unsigned int i = lhs.digits.size(); i > 0; --i)
   {
-    if(lhs.digits[i] < rhs.digits[i])
+    if(lhs.digits[i-1] < rhs.digits[i-1])
       return true;
-    if(lhs.digits[i] > rhs.digits[i])
+    if(lhs.digits[i-1] > rhs.digits[i-1])
      return false;
   }
   return false;
@@ -493,9 +493,9 @@ std::istream& operator>>(std::istream &in, Number& num)
 }
  std::ostream& operator<<(std::ostream &out, const Number& num)
 {
-  for(unsigned int i = num.mst_sig_dig(); i >= 0; --i)
+  for(unsigned int i = num.digits.size(); i > 0; --i)
   {
-     out << num[i];
+     out << num[i-1];
      out << " ";
   }
   return out;
