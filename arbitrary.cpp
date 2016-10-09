@@ -78,20 +78,20 @@ Number& Number::operator=(unsigned int decimal)
    return(*this);
 }
 
-Number Number::operator<<( int shift )
+Number Number::operator<<(unsigned int shift )
 {
   Number result(*this);
   result.digits.insert(result.digits.begin(), shift, 0);
   return result;
 }
 
-Number& Number::operator<<=( int shift )
+Number& Number::operator<<=(unsigned int shift )
 {
   digits.insert(digits.begin(), shift, 0);
   return *this;
 }
 
-Number Number::operator>>( int shift )
+Number Number::operator>>(unsigned int shift )
 {
   Number result(*this);
   if(shift >= result.digits.size())
@@ -100,7 +100,7 @@ Number Number::operator>>( int shift )
     result.digits.push_back(0);
     return result;
   }
-  for( int i = shift; i < digits.size(); ++i)
+  for(unsigned int i = shift; i < digits.size(); ++i)
     result.digits[i-shift] = result.digits[i];
 
   for(; shift > 0; --shift)
@@ -109,7 +109,7 @@ Number Number::operator>>( int shift )
   return result;
 }
 
-Number& Number::operator>>=( int shift )
+Number& Number::operator>>=(unsigned int shift )
 {
   if(shift >= digits.size())
   {
@@ -117,7 +117,7 @@ Number& Number::operator>>=( int shift )
     digits.push_back(0);
     return *this;
   }
-  for( int i = shift; i < digits.size(); ++i)
+  for(unsigned int i = shift; i < digits.size(); ++i)
     digits[i-shift] = digits[i];
 
   for(; shift > 0; --shift)
@@ -132,7 +132,7 @@ Number Number::operator+( Number num)
   int carry = 0;
   Number sum(*this);
   match_length(sum, num);
-  for( int i = 0; i < sum.digits.size(); ++i)
+  for(unsigned int i = 0; i < sum.digits.size(); ++i)
   {
     carry = ( add_arbitrary(sum.digits[i], carry, sum.base) 
             + add_arbitrary(sum.digits[i], num.digits[i], sum.base) );
@@ -148,7 +148,7 @@ Number& Number::operator+=( Number num)
   assert(base == num.base);
   int carry = 0;
   match_length(*this, num);
-  for( int i = 0; i < digits.size(); ++i)
+  for(unsigned int i = 0; i < digits.size(); ++i)
   {
     carry = ( add_arbitrary(digits[i], carry, base) 
               + add_arbitrary(digits[i], num.digits[i], base) );
@@ -166,7 +166,7 @@ Number Number::operator-( Number num)
   Number sum(*this);
 
   if(num.digits.size() < sum.digits.size())
-    for(int i = num.digits.size(); i < sum.digits.size(); ++i)
+    for(unsigned int i = num.digits.size(); i < sum.digits.size(); ++i)
       num.digits.push_back(0);
 
   for(unsigned int i = 0; i < sum.digits.size(); ++i)
@@ -307,7 +307,7 @@ int Number::convert_decimal()
 {
   int sum = 0;
   int power = 1;
-  for(int i = 0; i < digits.size(); ++i)
+  for(unsigned int i = 0; i < digits.size(); ++i)
   {
      sum += digits[i] * power;
      power *= base;
@@ -318,7 +318,7 @@ int Number::convert_decimal()
 void Number::double_num()
 {
   int carry = 0;
-  for(int i = 0; i < digits.size(); ++i)
+  for(unsigned int i = 0; i < digits.size(); ++i)
   {
     digits[i] *= 2;
     digits[i] += carry;
@@ -333,7 +333,7 @@ Number Number::multiply_by_two()
 {
   Number temp(*this);
   int carry = 0;
-  for(int i = 0; i < temp.digits.size(); ++i)
+  for(unsigned int i = 0; i < temp.digits.size(); ++i)
   {
     temp.digits[i] *= 2;
     temp.digits[i] += carry;
@@ -472,7 +472,7 @@ int Number::operator[]( int place) const
 
 std::istream& operator>>(std::istream &in, Number& num)
 {
-  unsigned int temp;
+  int temp;
   num.digits.clear();
   in >> num.base;
   std::string line;
