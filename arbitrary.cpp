@@ -161,7 +161,7 @@ Number& Number::operator+=( Number num)
 Number Number::operator-( Number num)
 {
   assert(base == num.base);
-  assert(*this > num);
+  assert(*this >= num);
   int carry = 0;
   Number sum(*this);
 
@@ -181,7 +181,7 @@ Number& Number::operator-=( Number num)
 {
   assert(base == num.base);
   unsigned int carry = 0;
-  assert(*this > num);
+  assert(*this >= num);
 
   if(num.digits.size() < digits.size() )
     for(unsigned int i = num.digits.size(); i < digits.size(); ++i)

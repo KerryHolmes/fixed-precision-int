@@ -11,7 +11,7 @@ cmake_minimum_required(VERSION 3.0)
 # Turn on all warnings and make them errors.
 # Also enable a set of sanitizers to handle various
 # kinds of undefined behaviors.
-set(CMAKE_CXX_FLAGS "-Wall -std=c++11 ${SAN_FLAGS}")
+set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -ggdb ${SAN_FLAGS}")
 
 
 # Declares the executable to be built from source files
