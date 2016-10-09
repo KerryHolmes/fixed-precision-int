@@ -98,7 +98,7 @@ Number Number::operator>>(unsigned int shift )
   if(shift >= result.digits.size())
   {
     result.digits.clear();
-    result.push_back(0);
+    result.digits.push_back(0);
     return result;
   }
   for(unsigned int i = shift; i < digits.size(); ++i)
@@ -162,12 +162,11 @@ Number& Number::operator+=( Number num)
 Number Number::operator-( Number num)
 {
   assert(base == num.base);
+  assert(*this > num);
   unsigned int carry = 0;
   Number sum(*this);
-  if(sum < num)
-    throw std::runtime_error("Negative Number Detected");
 
-  else if(num.digits.size() < sum.digits.size())
+  if(num.digits.size() < sum.digits.size())
     for(unsigned int i = num.digits.size(); i < sum.digits.size(); ++i)
       num.digits.push_back(0);
 
@@ -183,10 +182,9 @@ Number& Number::operator-=( Number num)
 {
   assert(base == num.base);
   unsigned int carry = 0;
-  if(*this < num)
-    throw std::runtime_error("Negative Number Detected");
+  assert(*this > num);
 
-  else if(num.digits.size() < digits.size() )
+  if(num.digits.size() < digits.size() )
     for(unsigned int i = num.digits.size(); i < digits.size(); ++i)
       num.digits.push_back(0);
 
@@ -308,7 +306,7 @@ unsigned int sub_arbitrary(unsigned int& lhs, const unsigned int& rhs,
   }
 }
 
-int Number::convert_decimal()
+unsigned int Number::convert_decimal()
 {
   unsigned int sum = 0;
   unsigned int power = 1;
@@ -465,12 +463,12 @@ unsigned int Number::mst_sig_dig() const
   return digits.size()-1;
 }
 
-unsigned int& Number::operator[](int place)
+unsigned int& Number::operator[](unsigned int place)
 {
   return digits[place];
 }
 
-unsigned int Number::operator[](int place) const
+unsigned int Number::operator[](unsigned int place) const
 {
   return digits[place];
 }
