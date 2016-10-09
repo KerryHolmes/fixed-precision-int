@@ -487,7 +487,7 @@ std::istream& operator>>(std::istream &in, Number& num)
    num.digits.push_back(temp);
   }
   std::reverse(num.digits.begin(), num.digits.end());
-  while(num[mst_sig_dig()] == 0)
+  while(num[num.mst_sig_dig()] == 0)
        num.digits.pop_back();
   return in;
 }
