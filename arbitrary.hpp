@@ -29,8 +29,8 @@ class Number{
 //These operators allow access to the members of the digits vector from
 //the class itself, rather than the dot accessor. They are private
 //to ensure that the vector is not manipulated directly
-  unsigned int& operator[](int place);
-  unsigned int operator[](int place) const;
+  unsigned int& operator[](unsigned int place);
+  unsigned int operator[](unsigned int place) const;
 
 public:
 //constructs the number to have a 1element vector with every digit at 0
@@ -48,7 +48,7 @@ public:
 //Copy assignment operator works by using the vector assignment operator to
 //replace the current vector for this object. The base is also taken from the
 //reference vector, making a complete copy of the reference.
-  Number& operator=( const Number& c);
+  Number& operator=(const Number& c);
 //This assignment operator converts a decimal number to a type Number via 
 //repeated division as above
   Number& operator=(unsigned int decimal);
@@ -126,7 +126,9 @@ bool operator!=( const Number& lhs, const Number& rhs);
 bool operator<=( const Number& lhs, const Number& rhs);
 bool operator>=( const Number& lhs, const Number& rhs);
 
-unsigned int add_arbitrary( int& lhs, const int& rhs, int base);
-unsigned int sub_arbitrary( int& lhs, const int& rhs, int base);
+unsigned int add_arbitrary(unsigned int& lhs, const unsigned int& rhs, 
+                                                    unsigned int base);
+unsigned int sub_arbitrary(unsigned int& lhs, const unsigned int& rhs, 
+                                                    unsigned int base);
 
 #endif
