@@ -101,7 +101,7 @@ Number Number::operator>>(unsigned int shift )
     return result;
   }
   for(unsigned int i = shift; i < digits.size(); ++i)
-    result.digits[i-shift] = result.digits[i];
+    result[i-shift] = result[i];
 
   for(; shift > 0; --shift)
     result.digits.pop_back();
@@ -134,8 +134,8 @@ Number Number::operator+( Number num)
   match_length(sum, num);
   for(unsigned int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( add_arbitrary(sum.digits[i], carry, sum.base) 
-            + add_arbitrary(sum.digits[i], num.digits[i], sum.base) );
+    carry = ( add_arbitrary(sum[i], carry, sum.base) 
+            + add_arbitrary(sum[i], num[i], sum.base) );
   }
   if(carry)
     sum.digits.push_back(carry);
@@ -171,8 +171,8 @@ Number Number::operator-( Number num)
 
   for(unsigned int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( sub_arbitrary(sum.digits[i], carry, sum.base) 
-            + sub_arbitrary(sum.digits[i], num.digits[i], sum.base) );
+    carry = ( sub_arbitrary(sum[i], carry, sum.base) 
+            + sub_arbitrary(sum[i], num[i], sum.base) );
   }
   return sum;
 }
@@ -200,9 +200,9 @@ Number Number::operator*( Number num)
   assert(base == num.base);
   Number temp(*this);
   Number product(0,base);
-  while(num.digits[num.mst_sig_dig()] != 0)
+  while(num[num.mst_sig_dig()] != 0)
   {
-    if(num.digits[0] % 2 == 1 )
+    if(num[0] % 2 == 1 )
     {
       product += temp;
     }
@@ -216,9 +216,9 @@ Number& Number::operator*=( Number num)
 {
   assert(base == num.base);
   Number product(0,base);
-  while(num.digits[num.mst_sig_dig()] != 0)
+  while(num[num.mst_sig_dig()] != 0)
   {
-    if(num.digits[0] % 2 == 1 )
+    if(num[0] % 2 == 1 )
     {
       product += *this;
     }
@@ -234,7 +234,10 @@ Number Number::operator/(Number num)
   assert(base == num.base);
   Number temp(*this);
   match_length(temp, num);
-  return recur_division(temp, num);
+  temp = recur_division(temp, num);
+  while(temp[temp.mst_sig_dig()] == 0 && temp.digits.size() > 1)
+      temp.digits.pop_back();
+  return temp;
 }
 
 Number& Number::operator/=(Number num)
@@ -242,6 +245,8 @@ Number& Number::operator/=(Number num)
   assert(base == num.base);
   match_length(*this, num);
   *this = recur_division(*this, num);
+  while(digits[mst_sig_dig()] == 0 && digits.size() > 1)
+      digits.pop_back();
   return *this;
 }
 
@@ -250,7 +255,10 @@ Number Number::operator%(Number num)
   assert(base == num.base);
   Number temp(*this);
   match_length(temp, num);
-  return recur_modulus(temp, num);
+  temp = recur_modulus(temp, num);
+  while(temp[temp.mst_sig_dig()] == 0 && temp.digits.size() > 1)
+      temp.digits.pop_back();
+  return 
 }
 
 Number& Number::operator%=(Number num)
@@ -258,6 +266,8 @@ Number& Number::operator%=(Number num)
   assert(base == num.base);
   match_length(*this, num);
   *this = recur_modulus(*this, num);
+  while(digits[mst_sig_dig()] == 0 && digits.size() > 1)
+       digits.pop_back();
   return *this;
 }
 
@@ -335,10 +345,10 @@ Number Number::multiply_by_two()
   int carry = 0;
   for(unsigned int i = 0; i < temp.digits.size(); ++i)
   {
-    temp.digits[i] *= 2;
-    temp.digits[i] += carry;
-    carry = temp.digits[i] / temp.base;
-    temp.digits[i] = temp.digits[i] % temp.base;
+    temp[i] *= 2;
+    temp[i] += carry;
+    carry = temp[i] / temp.base;
+    temp[i] = temp[i] % temp.base;
   }
   if(carry)
     temp.digits.push_back(carry);
@@ -364,11 +374,11 @@ Number Number::divide_by_two()
   Number temp(*this);
   for(int i = temp.mst_sig_dig(); i > 0; --i)
   {
-    temp.digits[i-1] += base * (temp.digits[i] % 2);
-    temp.digits[i] = temp.digits[i] / 2;
+    temp[i-1] += base * (temp[i] % 2);
+    temp[i] = temp[i] / 2;
   }
-  temp.digits[0] = temp.digits[0] / 2;
-  while(temp.digits[temp.mst_sig_dig()] == 0 && temp.digits.size() > 1)
+  temp[0] = temp[0] / 2;
+  while(temp[temp.mst_sig_dig()] == 0 && temp.digits.size() > 1)
   {
     temp.digits.pop_back();
   }
@@ -384,7 +394,7 @@ bool operator==( const Number& lhs, const Number& rhs)
   }
   for(int i = lhs.mst_sig_dig(); i >= 0; --i)
   {
-    if(lhs.digits[i] != rhs.digits[i])
+    if(lhs[i] != rhs[i])
     {
        return false;
     }
@@ -417,9 +427,9 @@ bool operator<( const Number& lhs, const Number& rhs)
   }
   for(int i = lhs.mst_sig_dig(); i >= 0; --i)
   {
-    if(lhs.digits[i] < rhs.digits[i])
+    if(lhs[i] < rhs[i])
       return true;
-    if(lhs.digits[i] > rhs.digits[i])
+    if(lhs[i] > rhs[i])
      return false;
   }
   return false;
