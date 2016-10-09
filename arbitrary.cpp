@@ -258,7 +258,7 @@ Number Number::operator%(Number num)
   temp = recur_modulus(temp, num);
   while(temp[temp.mst_sig_dig()] == 0 && temp.digits.size() > 1)
       temp.digits.pop_back();
-  return 
+  return temp;
 }
 
 Number& Number::operator%=(Number num)
