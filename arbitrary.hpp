@@ -56,22 +56,22 @@ public:
 //the number of elements specified in shift, padding the beginning of the
 //sequence with 0 and returning a temporary number. This does not change the 
 //value of the number the operator is called on.
-  Number operator<<( int shift);
+  Number operator<<(unsigned int shift);
 //Left shift compound assignment operator which will copy the sequence of digits
 //forward by the number of digits specified in shift, padding the beginning of 
 //the sequence with 0 and returning a reference to this. This does change the 
 //value of the number the operator is called on.
-  Number& operator<<=( int shift);
+  Number& operator<<=(unsigned int shift);
 //Right shift operator which will copy digits backwards in the vector by the
 //number of digits specified in shift. If this amount is greater than the 
 //number of digits, it will result in a 1 digits vector valued at 0. It returns
 //a temporary number and does not modify the number it is called on.
-  Number operator>>( int shift);
+  Number operator>>(unsigned int shift);
 //Right shift compound assignment operator which will copy digits backwards in 
 //the vector by the number of digits specified in shift. If this amount is
 //greater than the number of digits, it will result in a 1 digits vector valued 
 //at 0. It returns reference to this and does modify the number it is called on.
-  Number& operator>>=( int shift);
+  Number& operator>>=(unsigned int shift);
 
   Number operator+( Number num);
 
