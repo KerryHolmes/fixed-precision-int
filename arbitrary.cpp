@@ -35,14 +35,14 @@ Number::Number(const Number& c)//constructs a new number using the vector copy c
 //The logarithm is used to determine the most significant digit and stop writing there
 //The array is stored least significant to most significant, so there is no need to 
 //reverse the result of the repeated division
-Number::Number(unsigned int decimal, unsigned int use_base)
+Number::Number(unsigned int decimal, int use_base)
 :digits(), base(use_base)
 {
    if(decimal == 0)
-    digits = std::vector<unsigned int>(0,1);
+    digits = std::vector<int>(0,1);
   else
   {
-   digits = std::vector<unsigned int>(std::floor((std::log(decimal)
+   digits = std::vector<int>(std::floor((std::log(decimal)
                               /std::log(use_base)))+1,0);
    for(unsigned int i = 0; decimal > 0; ++i)
    {
@@ -65,11 +65,10 @@ Number& Number::operator=( const Number& c)
 Number& Number::operator=(unsigned int decimal)
 {
   if(decimal == 0)
-    digits = std::vector<unsigned int>(0,1);
+    digits = std::vector<int>(0,1);
   else
   {
-  digits = std::vector<unsigned int>(std::floor((std::log(decimal)
-                                     /std::log(base)))+1,0);
+  digits = std::vector<int>(std::floor((std::log(decimal)/std::log(base)))+1,0);
    for(unsigned int i = 0; decimal > 0; ++i)
    {
       digits[i] = decimal % base;
@@ -79,20 +78,20 @@ Number& Number::operator=(unsigned int decimal)
    return(*this);
 }
 
-Number Number::operator<<(unsigned int shift )
+Number Number::operator<<( int shift )
 {
   Number result(*this);
   result.digits.insert(result.digits.begin(), shift, 0);
   return result;
 }
 
-Number& Number::operator<<=(unsigned int shift )
+Number& Number::operator<<=( int shift )
 {
   digits.insert(digits.begin(), shift, 0);
   return *this;
 }
 
-Number Number::operator>>(unsigned int shift )
+Number Number::operator>>( int shift )
 {
   Number result(*this);
   if(shift >= result.digits.size())
@@ -101,7 +100,7 @@ Number Number::operator>>(unsigned int shift )
     result.digits.push_back(0);
     return result;
   }
-  for(unsigned int i = shift; i < digits.size(); ++i)
+  for( int i = shift; i < digits.size(); ++i)
     result.digits[i-shift] = result.digits[i];
 
   for(; shift > 0; --shift)
@@ -110,7 +109,7 @@ Number Number::operator>>(unsigned int shift )
   return result;
 }
 
-Number& Number::operator>>=(unsigned int shift )
+Number& Number::operator>>=( int shift )
 {
   if(shift >= digits.size())
   {
@@ -118,7 +117,7 @@ Number& Number::operator>>=(unsigned int shift )
     digits.push_back(0);
     return *this;
   }
-  for(unsigned int i = shift; i < digits.size(); ++i)
+  for( int i = shift; i < digits.size(); ++i)
     digits[i-shift] = digits[i];
 
   for(; shift > 0; --shift)
@@ -130,10 +129,10 @@ Number& Number::operator>>=(unsigned int shift )
 Number Number::operator+( Number num)
 {
   assert(base == num.base);
-  unsigned int carry = 0;
+  int carry = 0;
   Number sum(*this);
   match_length(sum, num);
-  for(unsigned int i = 0; i < sum.digits.size(); ++i)
+  for( int i = 0; i < sum.digits.size(); ++i)
   {
     carry = ( add_arbitrary(sum.digits[i], carry, sum.base) 
             + add_arbitrary(sum.digits[i], num.digits[i], sum.base) );
@@ -147,9 +146,9 @@ Number Number::operator+( Number num)
 Number& Number::operator+=( Number num)
 {
   assert(base == num.base);
-  unsigned int carry = 0;
+  int carry = 0;
   match_length(*this, num);
-  for(unsigned int i = 0; i < digits.size(); ++i)
+  for( int i = 0; i < digits.size(); ++i)
   {
     carry = ( add_arbitrary(digits[i], carry, base) 
               + add_arbitrary(digits[i], num.digits[i], base) );
@@ -163,11 +162,11 @@ Number Number::operator-( Number num)
 {
   assert(base == num.base);
   assert(*this > num);
-  unsigned int carry = 0;
+  int carry = 0;
   Number sum(*this);
 
   if(num.digits.size() < sum.digits.size())
-    for(unsigned int i = num.digits.size(); i < sum.digits.size(); ++i)
+    for(int i = num.digits.size(); i < sum.digits.size(); ++i)
       num.digits.push_back(0);
 
   for(unsigned int i = 0; i < sum.digits.size(); ++i)
@@ -276,8 +275,7 @@ Number Number::recur_division( Number lhs, const Number& rhs)
   return (Number(1,lhs.base) + recur_division(lhs-rhs, rhs));
 }
 
-unsigned int add_arbitrary(unsigned int& lhs, const unsigned int& rhs, 
-                                                     unsigned int base)
+int add_arbitrary( int& lhs, const int& rhs, int base)
 {
   if( base > (lhs + rhs)  )
   {
@@ -291,8 +289,7 @@ unsigned int add_arbitrary(unsigned int& lhs, const unsigned int& rhs,
   }
 }
 
-unsigned int sub_arbitrary(unsigned int& lhs, const unsigned int& rhs, 
-                                                     unsigned int base)
+int sub_arbitrary( int& lhs, const int& rhs, int base)
 {
   if( 0 > (lhs - rhs) )
   {
@@ -306,11 +303,11 @@ unsigned int sub_arbitrary(unsigned int& lhs, const unsigned int& rhs,
   }
 }
 
-unsigned int Number::convert_decimal()
+int Number::convert_decimal()
 {
-  unsigned int sum = 0;
-  unsigned int power = 1;
-  for(unsigned int i = 0; i < digits.size(); ++i)
+  int sum = 0;
+  int power = 1;
+  for(int i = 0; i < digits.size(); ++i)
   {
      sum += digits[i] * power;
      power *= base;
@@ -320,8 +317,8 @@ unsigned int Number::convert_decimal()
 
 void Number::double_num()
 {
-  unsigned int carry = 0;
-  for(unsigned int i = 0; i < digits.size(); ++i)
+  int carry = 0;
+  for(int i = 0; i < digits.size(); ++i)
   {
     digits[i] *= 2;
     digits[i] += carry;
@@ -335,8 +332,8 @@ void Number::double_num()
 Number Number::multiply_by_two()
 {
   Number temp(*this);
-  unsigned int carry = 0;
-  for(unsigned int i = 0; i < temp.digits.size(); ++i)
+  int carry = 0;
+  for(int i = 0; i < temp.digits.size(); ++i)
   {
     temp.digits[i] *= 2;
     temp.digits[i] += carry;
@@ -350,7 +347,7 @@ Number Number::multiply_by_two()
 
 void Number::half()
 {
-  for(unsigned int i = mst_sig_dig(); i > 0; --i)
+  for(int i = mst_sig_dig(); i > 0; --i)
   {
     digits[i-1] += base * (digits[i] % 2);
     digits[i] = digits[i] / 2;
@@ -365,7 +362,7 @@ void Number::half()
 Number Number::divide_by_two()
 {
   Number temp(*this);
-  for(unsigned int i = temp.mst_sig_dig(); i > 0; --i)
+  for(int i = temp.mst_sig_dig(); i > 0; --i)
   {
     temp.digits[i-1] += base * (temp.digits[i] % 2);
     temp.digits[i] = temp.digits[i] / 2;
@@ -385,9 +382,9 @@ bool operator==( const Number& lhs, const Number& rhs)
   {
     return false;
   }
-  for(unsigned int i = lhs.digits.size(); i > 0; --i)
+  for(int i = lhs.mst_sig_dig(); i >= 0; --i)
   {
-    if(lhs.digits[i-1] != rhs.digits[i-1])
+    if(lhs.digits[i] != rhs.digits[i])
     {
        return false;
     }
@@ -418,11 +415,11 @@ bool operator<( const Number& lhs, const Number& rhs)
   {
      return false;
   }
-  for(unsigned int i = lhs.digits.size(); i > 0; --i)
+  for(int i = lhs.mst_sig_dig(); i >= 0; --i)
   {
-    if(lhs.digits[i-1] < rhs.digits[i-1])
+    if(lhs.digits[i] < rhs.digits[i])
       return true;
-    if(lhs.digits[i-1] > rhs.digits[i-1])
+    if(lhs.digits[i] > rhs.digits[i])
      return false;
   }
   return false;
@@ -453,22 +450,22 @@ void Number::match_length( Number& lhs, Number& rhs)
          rhs.digits.push_back(0);
 }
 
-unsigned int Number::mst_sig_dig()
+int Number::mst_sig_dig()
 {
   return digits.size()-1;
 }
 
-unsigned int Number::mst_sig_dig() const
+int Number::mst_sig_dig() const
 {
   return digits.size()-1;
 }
 
-unsigned int& Number::operator[](unsigned int place)
+int& Number::operator[]( int place)
 {
   return digits[place];
 }
 
-unsigned int Number::operator[](unsigned int place) const
+int Number::operator[]( int place) const
 {
   return digits[place];
 }
@@ -493,9 +490,9 @@ std::istream& operator>>(std::istream &in, Number& num)
 }
  std::ostream& operator<<(std::ostream &out, const Number& num)
 {
-  for(unsigned int i = num.digits.size(); i > 0; --i)
+  for(int i = num.mst_sig_dig(); i >= 0; --i)
   {
-     out << num[i-1];
+     out << num[i];
      out << " ";
   }
   return out;
