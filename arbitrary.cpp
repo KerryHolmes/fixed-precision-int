@@ -22,7 +22,9 @@
 #include <sstream>
 #include <string>
 #include "arbitrary.hpp"
-
+//These two functions run in constant time, as they only return the element at
+//the specified position for the vector, and vectors support access in
+//constant time, or O(1).
 int& Number::operator[]( int place)
 {
   return digits[place];
@@ -32,19 +34,28 @@ int Number::operator[]( int place) const
 {
   return digits[place];
 }
-
-Number::Number() //constructs the number to have a size 1 vector with the only digit at 0
-:digits(1,0), base(2) //The base defaults to being two
+//This constructor creates a vector with one digit that is a 0. Construction of
+//a vector is linear with the container size, as the size will always be only 1,
+//the complexity of this operation is constant. The complexity of assigning the 
+//base to 2 is also constant. Overall this will run in constant time. O(1)
+Number::Number() 
+:digits(1,0), base(2) 
 {}
-
-Number::Number(const Number& c)//constructs a new number using the vector copy constructor
+//The copy constructor copies the base from c which is a trivial constant time 
+//operation. The copying of the vector is done via the vector's copy constructor
+//which will execute in linear time with the size of the array. Meaning overall,
+//this operation will execute in linear time, or O(n).
+Number::Number(const Number& c)
 :digits(c.digits), base(c.base)
 {}
-
-//Converts and stores a base 10 value in this number through repeated division
-//The logarithm is used to determine the most significant digit and stop writing there
-//The array is stored least significant to most significant, so there is no need to 
-//reverse the result of the repeated division
+//This function is similar to the one above. Two logarithms are used to 
+//determine the size of the vector, which is then created using the vector
+//fill constructor and copy assignment. Both of which will execute once in 
+//linear time. Then, the for loop occurs, again once for each element in the 
+//vector. In side the loop are four constant time operations. This results in 
+//an overall complexity of O(n) + O(n) + O(n), which will simplify to O(n).
+//There is an early exit case if the decimal number is 0, that will execute in
+//constant time, however this is not considered typical.
 Number::Number(unsigned int decimal, int use_base)
 :digits(), base(use_base)
 {
@@ -61,17 +72,16 @@ Number::Number(unsigned int decimal, int use_base)
    }
   }
 }
-
-//Copy assignment operatior works by using the vector assignment operator to replace the
-//current vector for this object
+//This operator is similar to the copy constructor, and will also perform is 
+//linear time, O(n).
 Number& Number::operator=( const Number& c)
 {
   digits = c.digits;
   base = c.base;
   return *this;
 }
-
-//This assignment operator converts a decimal number to a type Number via repeated division as above
+//This will perform similarly to the constructor above that takes a decimal 
+//number, does the same operations, and will also execute in linear time, O(n).
 Number& Number::operator=(unsigned int decimal)
 {
   if(decimal == 0)
@@ -87,20 +97,34 @@ Number& Number::operator=(unsigned int decimal)
   }
    return(*this);
 }
-
+//This operator creates a temporary copy of the number it is called on in linear
+//time. Then the vector insert function is called to fill the temporary vector
+//with the amount of zeros specified before the least significant digit. Overall
+//This results in a time complexity of O(n) + O(n), which is O(n) overall. There
+//is the possibility of reallocation of the vector, which would result in 
+//another linear operation, that would not change the overall complexity of the
+//operation.
 Number Number::operator<<(unsigned int shift )
 {
   Number result(*this);
   result.digits.insert(result.digits.begin(), shift, 0);
   return result;
 }
-
+//This operator will perform largely the same as the above, sans the initial
+//copy. In the end the result will be a linear operation, O(n).
 Number& Number::operator<<=(unsigned int shift )
 {
   digits.insert(digits.begin(), shift, 0);
   return *this;
 }
-
+//The operator begins with a copy of the number which will take place in linear
+//time. There will be a number of constant pop_back and copy operations that
+//will occur a number of times determined by the shift provided. O(s) and O(n-s)
+//respectively, where s is the number of shits provided. Overall, these costs
+//will be absorbed by the initial linear cost, resulting in a complexity of
+//O(n). There is an early exit case if the shift is greater than the number of 
+//digits, however it uses the clear function, which will still cause it to 
+//execute in linear time.
 Number Number::operator>>(unsigned int shift )
 {
   Number result(*this);
@@ -118,7 +142,9 @@ Number Number::operator>>(unsigned int shift )
     
   return result;
 }
-
+//This operator is similar to the one above, without the initial copy. This 
+//means that the determining factor is the term O(n-s), as long as the shift is 
+//strictly less than the number of digits. Otherwise it will be O(n).
 Number& Number::operator>>=(unsigned int shift )
 {
   if(shift >= digits.size())
@@ -135,7 +161,17 @@ Number& Number::operator>>=(unsigned int shift )
 
   return *this;
 }
-
+//This operator starts with a constant size comparison and initialization. Then,
+//a copy of the left operand is made in linear time. Next the match_size 
+//function is called, which will execute in linear complexity based on the 
+//difference in size of the two operands. After that, the for loop runs based on
+//the size of number. This will execute using an assignment, an integer addition 
+//and two calls to the add arbitrary function which, from its analysis below 
+//executes in constant time. The result of that is a linear complexity loop. 
+//After that is a branch and possibly a call to push_back, which are both 
+//constant time, unless a reallocation is required. In that case, push_back 
+//would execute in linear time. Overall this would yield 
+//O(1)+O(n)+O(n-m)+O(n)+O(1)+O(n). The overall analysis thus yields O(n).
 Number Number::operator+( Number num)
 {
   assert(base == num.base);
@@ -151,8 +187,8 @@ Number Number::operator+( Number num)
     sum.digits.push_back(carry);
   return sum;
 }
-
-
+//The analysis of this function is the same as above, sans the initail copy 
+//which results in the runtime of O(n).
 Number& Number::operator+=( Number num)
 {
   assert(base == num.base);
@@ -167,7 +203,17 @@ Number& Number::operator+=( Number num)
      digits.push_back(carry);
   return *this;
 }
-
+//This operator starts with a constant size comparison and initialization. Then,
+//a check is made that the right operand is not greater than the left. As shown
+//below, this is a linear time operation. After that a copy of the left operand 
+//is made in linear time. Next the a for loop may be called, which will 
+//execute in linear complexity based on the difference in size of the two 
+//operands. After that, the for loop runs based on the size of number. 
+//This will execute using an assignment, an integer addition and two calls
+//to the sub arbitrary function which, from its analysis below executes in
+//constant time. The result of that is a linear complexity loop. 
+//This results in O(1)+O(n)+O(n)+O(n-m)+O(n)
+//The overall analysis thus yields O(n).
 Number Number::operator-( Number num)
 {
   assert(base == num.base);
@@ -186,7 +232,8 @@ Number Number::operator-( Number num)
   }
   return sum;
 }
-
+//The analysis of this function is the same as above, sans the initail copy 
+//which results in the runtime of O(n).
 Number& Number::operator-=( Number num)
 {
   assert(base == num.base);
@@ -280,21 +327,31 @@ Number& Number::operator%=(Number num)
        digits.pop_back();
   return *this;
 }
-
+//This function is similar to the one below. It will be called recursively based
+//on the difference in value of lhs and rhs. The number of recusrive calls is 
+//the same as lhs / rhs. For each call there is a single subtraction which,
+//by its analysis below, is linear. This causes a runtime complexity of
+//O(lhs/rhs(n))
 Number Number::recur_modulus(Number lhs, const Number& rhs)
 {
   if(lhs < rhs)
     return lhs;
   return recur_modulus(lhs-rhs, rhs);
 }
-
+//This function will be called recursively until the left operand is evaluated
+//to be less than the right. This number varies based on the size of both 
+//operands. The number of times it will run is equivalent to its value. It will
+//be called lhs/rhs times. On each recursive call, there will be a constant time
+//Number construction, an addition and a subtraction. This results in a time of
+//O(lhs/rhs(n+n+1))
 Number Number::recur_division( Number lhs, const Number& rhs)
 {
   if(lhs < rhs)
     return Number(0, lhs.base);
   return (Number(1,lhs.base) + recur_division(lhs-rhs, rhs));
 }
-
+//These two function execute in constant time, as the call the constant time
+//function of vectir size, and then return that value minus one.
 int Number::mst_sig_dig()
 {
   return digits.size()-1;
@@ -304,7 +361,9 @@ int Number::mst_sig_dig() const
 {
   return digits.size()-1;
 }
-
+//This function will execute a series of constant operations in a for loop that
+// execute exaclty once for every digit in the number. This results in the time
+//complexity being linear O(n).
 int Number::convert_decimal()
 {
   int sum = 0;
@@ -316,7 +375,9 @@ int Number::convert_decimal()
   }
   return sum;
 }
-
+//This function contains one loop that will iterate over every element in the
+//vector and execute 8 primitive operations on the integer values of them.
+//This results in the overall runtime complexity of O(n).
 void Number::double_num()
 {
   int carry = 0;
@@ -330,7 +391,9 @@ void Number::double_num()
   if(carry)
     digits.push_back(carry);
 }
-
+//This function is nearly identical to the one above, with the added copy of
+//a number at the beginning. This happens sequentially however and is additive
+//to the complexity above. Resulting in a linear execution time O(n).
 Number Number::multiply_by_two()
 {
   Number temp(*this);
@@ -346,7 +409,10 @@ Number Number::multiply_by_two()
     temp.digits.push_back(carry);
   return temp;
 }
-
+//This function will execute a for loop onve for ever digit in the number. The
+//while loop after that will execute until the most significant digit is not 0
+//or the size is one. These loops execute outside of eachother, and in the worst
+//case will execute n times and n-1 times respectively. This results in O(n).
 void Number::half()
 {
   for(int i = mst_sig_dig(); i > 0; --i)
@@ -360,7 +426,8 @@ void Number::half()
     digits.pop_back();
   }
 }
-
+//The analysis of this function is the same as the above, with the added cost of
+//a copy. This will not change the run time which will still be O(n).
 Number Number::divide_by_two()
 {
   Number temp(*this);
@@ -376,7 +443,11 @@ Number Number::divide_by_two()
   }
   return temp;
 }
-
+//This operator executes in linear time based on the difference in sizes of the
+//numbers passed in. This is because the operation in each loop will run in 
+//constant time, and only one loop will run. The loop that runs will do so
+//until the two lenghts match. Thus the complexity is of O(n-m), where n and m
+//are the sizes of the left and right operands respectively.
 void Number::match_length( Number& lhs, Number& rhs)
 {
   while(lhs.digits.size() < rhs.digits.size())
@@ -385,7 +456,14 @@ void Number::match_length( Number& lhs, Number& rhs)
   while(rhs.digits.size() < lhs.digits.size())
          rhs.digits.push_back(0);
 }
-
+//This operator starts with a few constant operations, and then uses the getline
+//function from std cin to copy the input from cin to a string which is then
+//converted into an istringstream. This stream is iterated over once for 
+//each digit from input. The digits are then copied into the vector and reversed
+//in order. After that, elements are removed until the element at the end of the
+//vector is the most significant. Each of these operations is linear in 
+//complexity, however they happen in sequence and thus their complexities are 
+//additivie. Meaning the overall cost is still considered to be linear, O(n).
 std::istream& operator>>(std::istream &in, Number& num)
 {
   int temp;
@@ -404,7 +482,8 @@ std::istream& operator>>(std::istream &in, Number& num)
        num.digits.pop_back();
   return in;
 }
-
+//This operator contains a single loop that will execute once for each
+//digit. It is apparrent that this is a linear time operation, O(n).
  std::ostream& operator<<(std::ostream &out, const Number& num)
 {
   for(int i = num.mst_sig_dig(); i >= 0; --i)
@@ -412,9 +491,14 @@ std::istream& operator>>(std::istream &in, Number& num)
      out << num[i];
      out << " ";
   }
+  out << "x";
+  out << num.base;
   return out;
 }
-
+//This operator begins with comparisons of two expressions that can be evaluated
+//in constant time. After those comparisons, the two numbers are compared
+//lexicographically until a difference is found. In the worst case, every 
+//element will be compared resulting in a linear function, O(n).
 bool operator==( const Number& lhs, const Number& rhs)
 {
   assert(lhs.base == rhs.base);
@@ -431,7 +515,10 @@ bool operator==( const Number& lhs, const Number& rhs)
   }
   return true;
 }
-
+//This operator is largely the same as the above, however it is does a few more
+//comparisons in the begining and during the loop. All of the comparisons are 
+//still on constant time expressions, so the overall analysis will still yield
+//linear time, O(n).
 bool operator<( const Number& lhs, const Number& rhs)
 {
   assert(lhs.base == rhs.base);
@@ -452,14 +539,18 @@ bool operator<( const Number& lhs, const Number& rhs)
   }
   return false;
 }
-
+//This operator is also similar except with the added cost of constructing a new
+//number. However, this cost is additive and also linear, resulting in the 
+//analysis remaining linear time, O(n).
 bool operator==( const Number& lhs, const int rhs)
 {
   Number temp(rhs, lhs.base);
   return lhs == temp;
 
 }
-
+//These operators are implemented in terms of the comparison operators above.
+//They do not add any loops or functions, and thus have the same complexity,
+//O(n).
 bool operator!=( const Number& lhs, const Number& rhs)
 {
   return !(lhs == rhs);
@@ -479,7 +570,9 @@ bool operator>=( const Number& lhs, const Number& rhs)
 {
     return !(lhs < rhs);
 }
-
+//These operations happen on single integers, and execute in constant time. 
+//This is not to say they execute instantly, only that they do not vary cost
+//based on the number of digits in the number.
 int add_arbitrary( int& lhs, const int& rhs, int base)
 {
   if( base > (lhs + rhs)  )
