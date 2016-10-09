@@ -7,10 +7,14 @@
 * Purpose: To create a class that can represent a number of arbitrary base and
 * precision. The class supports the basic operations of numbers, such as 
 * addition, subtraction, multiplication, division, and modulus. This 
-* implementation only supports positive numbers. 
+* implementation only supports positive numbers.
+*
+* The comments in this file are to specify the runtime analysis of this 
+* implementation of the member functions and operators. The purpose of the 
+* functions and variables can be found in the hpp file accompanied by the 
+* function declarations.
 *******************************************************************************/
 #include <cassert>
-#include <stdexcept>
 #include <iostream>
 #include <vector>
 #include <cmath>

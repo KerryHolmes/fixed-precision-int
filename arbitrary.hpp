@@ -8,6 +8,10 @@
 * precision. The class supports the basic operations of numbers, such as 
 * addition, subtraction, multiplication, division, and modulus. This 
 * implementation only supports positive numbers. 
+*
+* The comments in this file are to specify the purpose and effects of the 
+* member functions and variables. Runtime analysis is contained in the cpp file
+* along with actual function definitions.
 *******************************************************************************/
 
 #ifndef NUMBER_HPP
