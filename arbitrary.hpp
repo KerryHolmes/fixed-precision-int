@@ -1,11 +1,14 @@
-/***********************************************************************
+/*******************************************************************************
 * Project 1: Fixed Precision Binary integer
 *
 * Author: Kerry Holmes
 *         kjh80@zips.uakron.edu
 *
-* Purpose: TODO Write the purpose
-*********************************************************************/
+* Purpose: To create a class that can represent a number of arbitrary base and
+* precision. The class supports the basic operations of numbers, such as 
+* addition, subtraction, multiplication, division, and modulus. This 
+* implementation only supports positive numbers. 
+*******************************************************************************/
 
 #ifndef NUMBER_HPP
 #define NUMBER_HPP
@@ -14,25 +17,38 @@
 #include <vector>
 
 class Number{
-    std::vector<int> digits; //The digits of the number are stored in this vector
-    int base; //The decimal value of the current base
-    int& operator[](int place);
-    int operator[](int place) const;
+//The digits of the number are stored in this vector as unsigned integers.
+//It is private to maintain the integrity of its data.
+  std::vector<unsigned int> digits;
+//This member represents the current base of the number.
+  unsigned int base; 
+//These operators allow access to the members of the digits vector from
+//the class itself, rather than the dot accessor. They are private
+//to ensure that the vector is not manipulated directly
+  unsigned int& operator[](int place);
+  unsigned int operator[](int place) const;
 
 public:
-  Number(); //constructs the number to have a 2048 vector with every digit at 0
-  Number(const Number& c);//constructs a new number using the vector copy constructor
+//constructs the number to have a 1element vector with every digit at 0
+//And a base of two.
+  Number(); 
+//Constructs a new number using the vector copy constructor
+  Number(const Number& c);
 //Converts and stores a base 10 value in this number through repeated division
-//The logarithm is used to determine the most significant digit and stop writing there
-//The array is stored least significant to most significant, so there is no need to 
-//reverse the result of the repeated division
+//The logarithm is used to determine the most significant digit create a 
+//vector that is just large enough to hold the value provided.
+//The array is stored least significant to most significant, so there is no 
+//need to reverse the result of the repeated division. As the number can be an
+//arbitrary base, the base must also be provided.
   Number(int decimal, int use_base);
-//Copy assignment operatior works by using the vector assignment operator to replace the
-//current vector for this object
+//Copy assignment operator works by using the vector assignment operator to
+//replace the current vector for this object. The base is also taken from the
+//reference vector, making a complete copy of the reference.
   Number& operator=( const Number& c);
-//This assignment operator converts a decimal number to a type Number via repeated division as above
+//This assignment operator converts a decimal number to a type Number via 
+//repeated division as above
   Number& operator=(int decimal);
-
+//Left shift 
   Number operator<<(int shift);
 
   Number& operator<<=(int shift);
@@ -65,11 +81,11 @@ public:
 
   Number recur_division( Number lhs, const Number& rhs);
 
-  int mst_sig_dig();
+  unsigned int mst_sig_dig();
 
-  int mst_sig_dig() const;
+  unsigned int mst_sig_dig() const;
 
-  int convert_decimal();
+  unsigned int convert_decimal();
 
   void double_num();
 
@@ -94,7 +110,7 @@ bool operator!=( const Number& lhs, const Number& rhs);
 bool operator<=( const Number& lhs, const Number& rhs);
 bool operator>=( const Number& lhs, const Number& rhs);
 
-int add_arbitrary( int& lhs, const int& rhs, int base);
-int sub_arbitrary( int& lhs, const int& rhs, int base);
+unsigned int add_arbitrary( int& lhs, const int& rhs, int base);
+unsigned int sub_arbitrary( int& lhs, const int& rhs, int base);
 
 #endif

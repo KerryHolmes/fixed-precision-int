@@ -1,11 +1,14 @@
-/***********************************************************************
+/*******************************************************************************
 * Project 1: Fixed Precision Binary integer
 *
 * Author: Kerry Holmes
 *         kjh80@zips.uakron.edu
 *
-* Purpose: TODO Write the purpose
-*********************************************************************/
+* Purpose: To create a class that can represent a number of arbitrary base and
+* precision. The class supports the basic operations of numbers, such as 
+* addition, subtraction, multiplication, division, and modulus. This 
+* implementation only supports positive numbers. 
+*******************************************************************************/
 #include <cassert>
 #include <stdexcept>
 #include <iostream>
@@ -35,7 +38,8 @@ Number::Number(int decimal, int use_base)
     digits = std::vector<int>(0,1);
   else
   {
-   digits = std::vector<int>(std::floor((std::log(decimal)/std::log(use_base)))+1,0);
+   digits = std::vector<int>(std::floor((std::log(decimal)
+                              /std::log(use_base)))+1,0);
    for( int i = 0; decimal > 0; ++i)
    {
       digits[i] = decimal % base;
@@ -60,7 +64,7 @@ Number& Number::operator=( int decimal)
     digits = std::vector<int>(0,1);
   else
   {
-   digits = std::vector<int>(std::floor((std::log(decimal)/std::log(base)))+1,0);
+  digits = std::vector<int>(std::floor((std::log(decimal)/std::log(base)))+1,0);
    for( int i = 0; decimal > 0; ++i)
    {
       digits[i] = decimal % base;
@@ -73,56 +77,48 @@ Number& Number::operator=( int decimal)
 Number Number::operator<<( int shift )
 {
   Number result(*this);
-  for(; shift > 0; --shift)
-  {
-    result.digits.push_back(result.digits[result.mst_sig_dig()]);
-    for(int i = result.digits.size()-2; i >= 0; --i)
-     {
-       result.digits[i+1] = result.digits[i];
-     }
-     result.digits[0] = 0;
-  }
+  result.digits.insert(result.digits.begin(), shift, 0);
   return result;
 }
 
 Number& Number::operator<<=( int shift )
 {
-  for(; shift > 0; --shift)
-  {
-    digits.push_back(digits[digits.size()-1]);
-    for(int i = digits.size()-2; i >= 0; --i)
-    {
-      digits[i+1] = digits[i];
-    }
-    digits[0] = 0;
-  }
+  digits.insert(digits.begin(), shift, 0);
   return *this;
 }
 
 Number Number::operator>>( int shift )
 {
   Number result(*this);
-  for(; shift > 0; --shift)
+  if(shift >= result.digits.size())
   {
-    for(unsigned int i = 1; i < digits.size(); ++i)
-    {
-      result.digits[i-1] = result.digits[i];
-    }
-    result.digits.pop_back();
+    result.digits.clear();
+    result.push_back(0);
+    return result;
   }
+  for(unsigned int i = shift; i < digits.size(); ++i)
+    result.digits[i-shift] = result.digits[i];
+
+  for(; shift > 0; --shift)
+    result.digits.pop_back();
+    
   return result;
 }
 
 Number& Number::operator>>=( int shift )
 {
-  for(; shift > 0; --shift)
+  if(shift >= digits.size())
   {
-    for(unsigned int i = 1; i < digits.size(); ++i)
-    {
-      digits[i-1] = digits[i];
-    }
-    digits.pop_back();
+    digits.clear();
+    digits.push_back(0);
+    return *this;
   }
+  for(unsigned int i = shift; i < digits.size(); ++i)
+    digits[i-shift] = digits[i];
+
+  for(; shift > 0; --shift)
+    digits.pop_back();
+
   return *this;
 }
 
@@ -134,12 +130,11 @@ Number Number::operator+( Number num)
   match_length(sum, num);
   for(unsigned int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( add_arbitrary(sum.digits[i], carry, sum.base) + add_arbitrary(sum.digits[i], num.digits[i], sum.base) );
+    carry = ( add_arbitrary(sum.digits[i], carry, sum.base) 
+            + add_arbitrary(sum.digits[i], num.digits[i], sum.base) );
   }
-
   if(carry)
-         sum.digits.push_back(carry);
-
+    sum.digits.push_back(carry);
   return sum;
 }
 
@@ -151,12 +146,11 @@ Number& Number::operator+=( Number num)
   match_length(*this, num);
   for(unsigned int i = 0; i < digits.size(); ++i)
   {
-    carry = ( add_arbitrary(digits[i], carry, base) + add_arbitrary(digits[i], num.digits[i], base) );
+    carry = ( add_arbitrary(digits[i], carry, base) 
+              + add_arbitrary(digits[i], num.digits[i], base) );
   }
-
   if(carry)
-         digits.push_back(carry);
-
+     digits.push_back(carry);
   return *this;
 }
 
@@ -165,26 +159,18 @@ Number Number::operator-( Number num)
   assert(base == num.base);
   int carry = 0;
   Number sum(*this);
-  if(sum.digits.size() <  num.digits.size())
-  {
+  if(sum < num)
     throw std::runtime_error("Negative Number Detected");
-  }
+
   else if(num.digits.size() < sum.digits.size())
-  {
     for(unsigned int i = num.digits.size(); i < sum.digits.size(); ++i)
-    {
       num.digits.push_back(0);
-    }
-  }
+
   for(unsigned int i = 0; i < sum.digits.size(); ++i)
   {
-    carry = ( sub_arbitrary(sum.digits[i], carry, sum.base) + sub_arbitrary(sum.digits[i], num.digits[i], sum.base) );
+    carry = ( sub_arbitrary(sum.digits[i], carry, sum.base) 
+            + sub_arbitrary(sum.digits[i], num.digits[i], sum.base) );
   }
-  if(carry > 0)
-  {
-    throw std::runtime_error("Negative Number Detected");
-  }
-
   return sum;
 }
 
@@ -192,26 +178,18 @@ Number& Number::operator-=( Number num)
 {
   assert(base == num.base);
   int carry = 0;
-  if(digits.size() <  num.digits.size())
-  {
+  if(*this < num)
     throw std::runtime_error("Negative Number Detected");
-  }
+
   else if(num.digits.size() < digits.size() )
-  {
     for(unsigned int i = num.digits.size(); i < digits.size(); ++i)
-    {
       num.digits.push_back(0);
-    }
-  }
+
   for(unsigned int i = 0; i < digits.size(); ++i)
   {
-    carry = ( sub_arbitrary(digits[i], carry, base) + sub_arbitrary(digits[i], num.digits[i], base) );
+    carry = ( sub_arbitrary(digits[i], carry, base) 
+            + sub_arbitrary(digits[i], num.digits[i], base) );
   }
-  if(carry > 0)
-  {
-    throw std::runtime_error("Negative Number Detected");
-  }
-
   return *this;
 }
 
